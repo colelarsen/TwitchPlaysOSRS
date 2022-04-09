@@ -326,7 +326,7 @@ def parseChat(lineRaw):
 
 #Move mouse, click, right click, press F1-F9, numpad 0-9, arrow keys
 
-alphabetToNums = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't']
+alphabetToNums = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't','w','x','y','z']
 
 
 
@@ -353,6 +353,13 @@ runY = 150
 specialX = 600
 specialY = 175
 
+def inv_pos(letter, number):
+    xCoord = invStartingX + (abs(len(alphabetToNums) - alphabetToNums.index(letter) - 4) * invSquareWidth)
+    yCoord = invStartingY + (number-1) * invSquareHeight
+    return xCoord, yCoord
+
+
+
 def leftClickMain(letter, number, right=False):
     xCoord = startingMainSquareX + (alphabetToNums.index(letter) * mainSquareWidth)
     yCoord = startingMainSquareY + (number-1) * mainSquareHeight
@@ -365,22 +372,16 @@ def leftClickMain(letter, number, right=False):
         pyautogui.click()
 
 def leftClickInv(letter, number, right=False):
-    xCoord = invStartingX + (alphabetToNums.index(letter) * invSquareWidth)
-    yCoord = invStartingY + (number-1) * invSquareHeight
-
     if right: 
-        moveMouse(xCoord, yCoord)
+        moveMouse(inv_pos(letter,number))
         pyautogui.click(button="right")
     else:
-        moveMouse(xCoord, yCoord)
+        moveMouse(inv_pos(letter,number))
         time.sleep(0.25)
         pyautogui.click()
 
 def dropItem(letter, number):
-    xCoord = invStartingX + (alphabetToNums.index(letter) * invSquareWidth)
-    yCoord = invStartingY + (number-1) * invSquareHeight
-
-    moveMouse(xCoord, yCoord)
+    moveMouse(inv_pos(letter,number)))
     pyautogui.keyDown("shift")
     time.sleep(0.1)
     pyautogui.click()
