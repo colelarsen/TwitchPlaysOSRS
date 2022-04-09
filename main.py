@@ -1,7 +1,5 @@
 import socket, time
 from tkinter.tix import MAX
-
-from pyperclip import waitForNewPaste
 from imagesearch import *
 import pyautogui
 import re
@@ -90,9 +88,9 @@ def parseChat(lineRaw):
             #perform left click on coordinates given
             coords = line.split(' ')[1].strip()
             num = int(re.split("[^\d]", coords)[1])
-            if coords[0] in invAlphabet and num < 8 and num >= 0:
+            if coords[0] in ['a', 'b', 'c', 'd'] and num < 8 and num >= 0:
                 leftClickInv(coords[0], num)
-        elif line[0]=='i' and line[1] in invAlphabet and line[2].isnumeric():
+        elif line[0]=='i' and line[1] in ['a', 'b', 'c', 'd'] and line[2].isnumeric():
             num = int(line[2])
             if num < 8 and num >= 0:
                 leftClickInv(line[1], num)
@@ -101,7 +99,7 @@ def parseChat(lineRaw):
             #perform left click on coordinates given
             coords = line.split(' ')[1].strip()
             num = int(re.split("[^\d]", coords)[1])
-            if coords[0] in invAlphabet and num < 8 and num >= 0:
+            if coords[0] in ['a', 'b', 'c', 'd'] and num < 8 and num >= 0:
                 dropItem(coords[0], num)
 
         elif line.startswith("mm "): 
@@ -129,7 +127,7 @@ def parseChat(lineRaw):
             #perform right click on coordinates given
             coords = line.split(' ')[1].strip()
             num = int(re.split("[^\d]", coords)[1])
-            if coords[0] in invAlphabet and num < 8 and num >= 0:
+            if coords[0] in ['a', 'b', 'c', 'd'] and num < 8 and num >= 0:
                 leftClickInv(coords[0], num, True)
 
         elif "esc"==line or "cancel"==line or "escape"==line:
@@ -138,7 +136,7 @@ def parseChat(lineRaw):
             pyautogui.keyUp("Escape")
         
         elif "qu"==line or line.startswith("qu "):
-            leftClickInv('w', 1)
+            leftClickInv('a', 1)
         
         
         elif "lc"==line or "click"==line: 
@@ -147,7 +145,7 @@ def parseChat(lineRaw):
             pyautogui.click(button="right")
 
         #lc a12 - left click on grid
-        elif line.startswith("lc"): 
+        elif "lc" in line: 
             #perform left click on coordinates given
             coords = line.split(' ')[1].strip()
             num = int(re.split("[^\d]", coords)[1])
@@ -155,7 +153,7 @@ def parseChat(lineRaw):
                 leftClickMain(coords[0], num)
         
         #rc a12 - right click on grid
-        elif line.startswith("rc"): 
+        elif "rc" in line: 
             #perform right click on coordinates given
             coords = line.split(' ')[1].strip()
             num = int(re.split("[^\d]", coords)[1])
@@ -273,8 +271,6 @@ def parseChat(lineRaw):
             first_char = line[0]
             if(first_char in alphabetToNums and line[1].isnumeric()):
                 leftClickMain(line[0], int(re.split("[^\d]", line)[1]))
-            if(first_char in invAlphabet and line[1].isnumeric()):
-                leftClickInv(line[0], int(re.split("[^\d]", line)[1]))
         except:
             return
     elif tester[0] != -1:
@@ -301,7 +297,6 @@ def parseChat(lineRaw):
 #Move mouse, click, right click, press F1-F9, numpad 0-9, arrow keys
 
 alphabetToNums = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't']
-invAlphabet = ['w', 'x', 'y', 'z']
 
 
 
@@ -340,7 +335,7 @@ def leftClickMain(letter, number, right=False):
         pyautogui.click()
 
 def leftClickInv(letter, number, right=False):
-    xCoord = invStartingX + (invAlphabet.index(letter) * invSquareWidth)
+    xCoord = invStartingX + (alphabetToNums.index(letter) * invSquareWidth)
     yCoord = invStartingY + (number-1) * invSquareHeight
 
     if right: 
