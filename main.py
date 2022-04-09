@@ -74,6 +74,36 @@ def readChat(resp):
         parseChat(msg)
 
 
+prefixes = ['ilc','i ','a']
+
+main_grid = [['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t'],
+            ['1','2','3','4','5','6','7','8','9','10','11','12','13']]
+inv_grid = [['w','x','y','z'],
+            ['1','2','3','4','5','6','7']]
+map_grid = ['l','r','u','d','ul','ur','dl','dr']
+
+inv_headers = ['combat',style,attack]
+
+clicks = ['lc','rc','ilc','irc']
+actions = ['drop','menu','move','cam','stop','space',]
+
+## UP down left right
+
+# split input string
+def parseChat2(lineRaw):
+    line = lineRaw.lower()
+    split_line = line.split()
+
+    prefix = txt.split()
+
+
+def move(dir):
+    # click 1 box below player
+
+
+
+
+
 def parseChat(lineRaw):  
 
     line = lineRaw.lower()
