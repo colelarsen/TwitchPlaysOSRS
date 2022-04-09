@@ -82,7 +82,7 @@ inv_grid = [['w','x','y','z'],
             ['1','2','3','4','5','6','7']]
 map_grid = ['l','r','u','d','ul','ur','dl','dr']
 
-inv_headers = ['combat',style,attack]
+inv_headers = ['combat',combat,style,attack]
 
 clicks = ['lc','rc','ilc','irc']
 actions = ['drop','menu','move','cam','stop','space',]
