@@ -1,5 +1,7 @@
 import socket, time
 from tkinter.tix import MAX
+
+from pyperclip import waitForNewPaste
 from imagesearch import *
 import pyautogui
 import re
@@ -80,7 +82,8 @@ def parseChat(lineRaw):
     print(line)
 
     tester = imagesearch("loginscreen.PNG", 0.8)
-    if tester[0] == -1:
+    bankPin = imagesearch("bankPin.PNG", 0.8)
+    if tester[0] == -1 and bankPin[0] == -1:
     
         #ilc 1-28 click inventory spot
         if "ilc" in line or (line[0]=='i' and line[1]==' ' and line[3].isnumeric()): 
@@ -128,6 +131,14 @@ def parseChat(lineRaw):
             num = int(re.split("[^\d]", coords)[1])
             if coords[0] in ['a', 'b', 'c', 'd'] and num < 8 and num >= 0:
                 leftClickInv(coords[0], num, True)
+
+        elif "esc"==line or "cancel"==line or "escape"==line:
+            pyautogui.keyDown("Escape")
+            time.sleep(0.25) 
+            pyautogui.keyUp("Escape")
+        
+        elif "qu"==line or line.startswith("qu "):
+            leftClickInv('a', 1)
         
         
         elif "lc"==line or "click"==line: 
@@ -264,9 +275,13 @@ def parseChat(lineRaw):
                 leftClickMain(line[0], int(re.split("[^\d]", line)[1]))
         except:
             return
-    else:
+    elif tester[0] != -1:
         if line == "login":
             login()
+    elif bankPin[0] != -1:
+        pyautogui.keyDown("Escape")
+        time.sleep(0.25) 
+        pyautogui.keyUp("Escape")
     
 
 
