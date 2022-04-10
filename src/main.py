@@ -43,7 +43,7 @@ def main():
 def testSingle(): 
     ttvCont = ttv.TtvController()
     try:
-        ttvCont.parseChat("cam left")
+        ttvCont.parseChat("cam left 3000")
     except Exception as e: 
         print(e)
 
