@@ -3,15 +3,52 @@ from tkinter.tix import MAX
 from imagesearch import *
 import pyautogui
 import re
+import commandValidation as validation
 from config import *
+import utility
 
 import osrsController as osrs
+
+
+class winSize:
+    def __init__(self):
+        self.xMax = 760
+        self.yMax = 480
+        self.xMin = 0 
+        self.yMin = 25
+
+    # Ensure target is within window
+    def check_x(self,x):
+        return x < self.xMax and x > self.xMin
+    def check_y(self,y):
+        return y < self.yMax and y > self.yMin
+
+    # Return mouse positions
+    def mouse_x_pos(self):
+        return pyautogui.position()[0]
+    def mouse_y_pos(self):
+        return pyautogui.position()[1]
+    
+    #TODO: add a click function here that moves the mouse
+    
+    # Mouse moving functions, one absolute the other relative to curr pos
+    def moveMouse(self, coords):
+        x = coords[0]
+        y = coords[1]
+        if self.check_x(x) and self.check_y(y):
+            pyautogui.moveTo(x, y)
+    def moveMouseRelative(self, coords):
+        x = coords[0]
+        y = coords[1]
+        if self.check_x(x + self.mouse_x_pos()) and self.check_y(y + self.mouse_y_pos()):
+            pyautogui.moveTo(x, y)
 
 
 class TtvController:
     def __init__(self):
         self.win = winSize()
         self.osrs = osrs.osrsController(self.win)
+        self.validation = validation.ValidationController(self.osrs)
 
     def readChat(self, resp):
         resp = resp.rstrip().split('\r\n')
@@ -28,47 +65,38 @@ class TtvController:
         line = lineRaw.lower()
         print(line)
 
-        tester = imagesearch("loginscreen.PNG", 0.8)
-        bankPin = imagesearch("bankPin.PNG", 0.8)
+        tester = imagesearch("Images/loginscreen.PNG", 0.8)
+        bankPin = imagesearch("Images/bankPin.PNG", 0.8)
         if tester[0] == -1 and bankPin[0] == -1:
         
-            #ilc 1-28 click inventory spot
-            if "ilc" in line or (line[0]=='i' and line[1]==' ' and line[3].isnumeric()): 
-                #perform left click on coordinates given
-                coords = line.split(' ')[1].strip()
-                num = int(re.split("[^\d]", coords)[1])
-                if coords[0] in ['a', 'b', 'c', 'd'] and num < 8 and num >= 0:
-                    self.osrs.ClickInv(coords[0], num)
-            elif line[0]=='i' and line[1] in ['a', 'b', 'c', 'd'] and line[2].isnumeric():
-                num = int(line[2])
-                if num < 8 and num >= 0:
-                    self.osrs.ClickInv(line[1], num)
+            num = utility.getFirstNumber(line)
+            #Check if the input line should left click on inv
+            if self.validation.validInvLClick(line): 
+                self.osrs.clickInv(line[0], num)
+            
+            #[a-t][1-13] - left click on grid
+            elif self.validation.validMainLClick(line):
+                self.osrs.clickMain(line[0], num)
 
-            elif line.startswith("drop "): 
-                #perform left click on coordinates given
+            elif self.validation.validDrop(line):
                 coords = line.split(' ')[1].strip()
-                num = int(re.split("[^\d]", coords)[1])
-                if coords[0] in ['a', 'b', 'c', 'd'] and num < 8 and num >= 0:
-                    self.osrs.dropItem(coords[0], num)
+                self.osrs.dropItem(coords[0], num)
 
-            elif line.startswith("mm "): 
+            elif line.startswith("mm ") or line.startswith("m ") or line.startswith("map "): 
                 dir = line.split(' ')
-                if(dir[1] == "top" or dir[1] == "t"):
+                if(dir[1] in ["top", "t"]):
                     self.win.moveMouse(650, 40)
-                    time.sleep(0.25)
                     pyautogui.click()
-                if(dir[1] == "bottom" or dir[1] == "bot" or dir[1] == "b"):
+                if dir[1] in ["bottom", "b", "bot", "down", "d"]:
                     self.win.moveMouse(650, 160)
-                    time.sleep(0.25)
                     pyautogui.click()
-                if(dir[1] == "left" or dir[1] == "l"):
+                if(dir[1] in ["left", "l"]):
                     self.win.moveMouse(590, 100)
-                    time.sleep(0.25)
                     pyautogui.click()
-                if(dir[1] == "right" or dir[1] == "r"):
+                if(dir[1] in ["right", "r"]):
                     self.win.moveMouse(710, 100)
-                    time.sleep(0.25)
                     pyautogui.click()
+                #TODO add diagonal options
 
             
             #irc right click inventory spot
@@ -77,7 +105,7 @@ class TtvController:
                 coords = line.split(' ')[1].strip()
                 num = int(re.split("[^\d]", coords)[1])
                 if coords[0] in ['a', 'b', 'c', 'd'] and num < 8 and num >= 0:
-                    self.osrs.ClickInv(coords[0], num, True)
+                    self.osrs.clickInv(coords[0], num, True)
 
             elif "esc"==line or "cancel"==line or "escape"==line:
                 pyautogui.keyDown("Escape")
@@ -85,7 +113,7 @@ class TtvController:
                 pyautogui.keyUp("Escape")
             
             elif "qu"==line or line.startswith("qu "):
-                self.osrs.ClickInv('a', 1)
+                self.osrs.clickInv('a', 1)
             
             
             elif "lc"==line or "click"==line: 
@@ -93,14 +121,7 @@ class TtvController:
             elif "rc"==line or "right click"==line: 
                 pyautogui.click(button="right")
 
-            #lc a12 - left click on grid
-            elif "lc" in line: 
-                #perform left click on coordinates given
-                coords = line.split(' ')[1].strip()
-                letter = coords[0]
-                num = int(re.split("[^\d]", coords)[1])
-                if osrs.checkMainCoord(letter, num):
-                    self.osrs.ClickMain(letter, num)
+            
             
             #rc a12 - right click on grid
             elif "rc" in line: 
@@ -109,7 +130,7 @@ class TtvController:
                 letter = coords[0]
                 num = int(re.split("[^\d]", coords)[1])
                 if osrs.checkMainCoord(letter, num):
-                    self.osrs.ClickMain(letter, num, True)
+                    self.osrs.clickMain(letter, num, True)
             
             #reset, reset camera, compass - Reset camera
             elif line=="stop":
@@ -221,7 +242,7 @@ class TtvController:
             try:
                 first_char = line[0]
                 if(first_char in self.osrs.main.cols and line[1].isnumeric()):
-                    self.osrs.ClickMain(line[0], int(re.split("[^\d]", line)[1]))
+                    self.osrs.clickMain(line[0], int(re.split("[^\d]", line)[1]))
             except:
                 return
         elif tester[0] != -1:
@@ -231,67 +252,3 @@ class TtvController:
             pyautogui.keyDown("Escape")
             time.sleep(0.25) 
             pyautogui.keyUp("Escape")
-
-class winSize:
-    def __init__(self):
-        self.xMax = 760
-        self.yMax = 480
-        self.xMin = 0 
-        self.yMin = 25
-
-    # Ensure target is within window
-    def check_x(self,x):
-        return x < self.xMax and x > self.xMin
-    def check_y(self,y):
-        return y < self.yMax and y > self.yMin
-
-    # Return mouse positions
-    def mouse_x_pos(self):
-        return pyautogui.position()[0]
-    def mouse_y_pos(self):
-        return pyautogui.position()[1]
-    
-    # Mouse moving functions, one absolute the other relative to curr pos
-    def moveMouse(self, x, y):
-        if self.check_x(x) and self.check_y(y):
-            pyautogui.moveTo(x, y)
-    def moveMouseRelative(self, x, y):
-        if self.check_x(x + self.mouse_x_pos()) and self.check_y(y + self.mouse_y_pos()):
-            pyautogui.moveTo(x, y)
-
-
-
-#Handles reading twitch chat and passes it to TTVController
-def main(): 
-
-    server = 'irc.chat.twitch.tv'
-    port = 6667
-    nickname = 'newtwitchplaysosrs'
-
-    sock = socket.socket()
-
-    sock.connect((server, port))
-    sock.send(f"PASS {token}\n".encode('utf-8'))
-    sock.send(f"NICK {nickname}\n".encode('utf-8'))
-    sock.send(f"JOIN {channel}\n".encode('utf-8'))
-
-    print("Started")
-
-    ttvController = TtvController()
-
-    while True:
-        resp = sock.recv(2048).decode('utf-8')
-
-        if resp.startswith('PING'):
-            sock.send("PONG\n".encode('utf-8'))
-        
-        elif len(resp) > 0:
-            print(resp)
-            try:
-                ttvController.readChat(resp)
-            except:
-                print("An exception occurred")
-        
-        time.sleep(0.6)
-
-main()

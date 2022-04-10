@@ -103,9 +103,9 @@ class osrsController:
         return letter in self.inv.cols and num in self.inv.rows
 
     def login(self):
-        isOnMainScreen = imagesearch("loginscreen.PNG", 0.8)
+        isOnMainScreen = imagesearch("Images/loginscreen.PNG", 0.8)
         if isOnMainScreen[0] != -1:
-            isOnDC = imagesearch("disconnectscreen.PNG", 0.8)
+            isOnDC = imagesearch("Images/disconnectscreen.PNG", 0.8)
             if isOnDC[0] != -1:
                 self.win.moveMouse(430, 320)
                 pyautogui.click()
@@ -138,6 +138,18 @@ class osrsController:
         pyautogui.keyDown(key)
         time.sleep(0.1)
         pyautogui.keyUp(key)
+
+    def calibration(self):
+        for i in range(len(self.main.cols)):
+            for j in range(len(self.main.rows)):
+                self.moveMouse(self.main.StartX + self.main.SqWidth*i, self.main.StartY + self.main.SqHeight*j)
+                time.sleep(0.001)
+        
+        self.moveMouse(self.inv.StartX,self.inv.StartY)
+        for i in range(0, 4):
+            for j in range(0, 7):
+                self.moveMouse(self.inv.StartX + self.inv.SqWidth*i, self.inv.StartY + self.inv.SqHeight*j)
+                time.sleep(0.01)
 
 
 
