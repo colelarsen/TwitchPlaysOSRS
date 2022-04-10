@@ -154,6 +154,9 @@ class ValidationController:
     def validInv(self, line):
         return line == "i" or line == "inv" or line == "inventory"
     
+    def validLogin(self, line):
+        return line == "login"
+    
     def validGear(self, line):
         return   line == "gear" or line == "equip" or line == "equipment"
     

@@ -176,17 +176,17 @@ class TtvController:
                 
                 #reset, reset camera, compass - Reset camera
                 elif self.validation.validResetCam(line):
-                    self.osrs.uiButtons.clickCompass()
+                    self.osrs.buttons.clickCompass()
 
                 #run, walk - run
                 elif self.validation.validRun(line):
-                    self.osrs.uiButtons.clickRun()
+                    self.osrs.buttons.clickRun()
                 #sa, special, special attack - special attack
                 elif self.validation.validSpecialAttack(line):
-                    self.osrs.uiButtons.clickSpecial()
+                    self.osrs.buttons.clickSpecial()
                 #pray, prayer - prayer on
                 elif self.validation.validPrayer(line):
-                    self.osrs.uiButtons.clickPrayer()
+                    self.osrs.buttons.clickPrayer()
                 
                 elif self.validation.validSay(line):
                     x = threading.Thread(target=self.osrs.typeText, args=(line,))
@@ -205,15 +205,15 @@ class TtvController:
                 #move mouse x y
                 elif self.validation.validMouseMoveTo(line):
                     dur = line.split(' ')
-                    self.win.moveMouse(int(dur[3]), int(dur[4]))
+                    self.win.moveMouse((int(dur[3]), int(dur[4])))
                 
                 elif self.validation.validCenterMouse(line):
-                    self.win.moveMouse(260, 210)
+                    self.win.moveMouse((260, 210))
                 
                 #move mouse x y
                 elif self.validation.validMouseMove(line):
                     dur = line.split(' ')
-                    self.win.moveMouseRelative(int(dur[2]), int(dur[3])*-1)
+                    self.win.moveMouseRelative((int(dur[2]), int(dur[3])*-1))
                 
                 #click on a certain menu item
                 elif self.validation.validMenu(line):
@@ -221,7 +221,7 @@ class TtvController:
                         self.osrs.menuClick(num)
 
                 elif self.validation.validZoom(line):
-                    self.win.moveMouse(260, 210)
+                    self.win.moveMouse((260, 210))
                     self.osrs.zoom(line.split(' ')[1])
 
                 elif self.validation.validScroll(line):
