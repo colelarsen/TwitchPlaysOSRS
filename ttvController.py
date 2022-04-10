@@ -8,91 +8,10 @@ from config import *
 import osrsController as osrs
 
 
-def main(): 
-
-    server = 'irc.chat.twitch.tv'
-    port = 6667
-    nickname = 'newtwitchplaysosrs'
-
-    sock = socket.socket()
-
-    sock.connect((server, port))
-    sock.send(f"PASS {token}\n".encode('utf-8'))
-    sock.send(f"NICK {nickname}\n".encode('utf-8'))
-    sock.send(f"JOIN {channel}\n".encode('utf-8'))
-
-    print("Started")
-
-    ttvController = ttvController()
-
-    while True:
-        resp = sock.recv(2048).decode('utf-8')
-
-        if resp.startswith('PING'):
-            sock.send("PONG\n".encode('utf-8'))
-        
-        elif len(resp) > 0:
-            print(resp)
-            try:
-                ttvController.readChat(resp)
-            except:
-                print("An exception occurred")
-        
-        time.sleep(0.6)
-
-
-
-
-class winSize:
-    def __init__(self):
-        self.xMax = 760
-        self.yMax = 480
-        self.xMin = 0 
-        self.yMin = 25
-
-    # Ensure target is within window
-    def check_x(self,x):
-        return x < self.xMax and x > self.xMin
-    def check_y(self,y):
-        return y < self.yMax and y > self.yMin
-
-    # Return mouse positions
-    def mouse_x_pos(self):
-        return pyautogui.position()[0]
-    def mouse_y_pos(self):
-        return pyautogui.position()[1]
-    
-    # Mouse moving functions, one absolute the other relative to curr pos
-    def moveMouse(self, x, y):
-        if self.check_x(x) and self.check_y(y):
-            pyautogui.moveTo(x, y)
-    def moveMouseRelative(self, x, y):
-        if self.check_x(x + self.mouse_x_pos()) and self.check_y(y + self.mouse_y_pos()):
-            pyautogui.moveTo(x, y)
-
-
-def arrowKey(self, key, dur=250):
-    pyautogui.keyDown(key)
-    time.sleep(dur/1000)
-    pyautogui.keyUp(key)
-def zoom(self, dir, tick=500):
-    if dir=="up" or dir=="in":
-        pyautogui.scroll(tick)
-        print(tick)
-    elif dir=="down" or dir=="out":
-        pyautogui.scroll(-tick)
-def keyPress(self, key):
-    pyautogui.keyDown(key)
-    time.sleep(0.1)
-    pyautogui.keyUp(key)
-
-
-class ttvController:
+class TtvController:
     def __init__(self):
         self.win = winSize()
-        self.osrs = osrs(self.win)
-
-
+        self.osrs = osrs.osrsController(self.win)
 
     def readChat(self, resp):
         resp = resp.rstrip().split('\r\n')
@@ -221,9 +140,9 @@ class ttvController:
                 dur = line.split(' ')
                 if len(dur) == 2:
                     if(int(dur[1]) <= 3000):
-                        arrowKey(dur[0], int(dur[1]))
+                        osrs.arrowKey(dur[0], int(dur[1]))
                 else:
-                    arrowKey(line)
+                    osrs.arrowKey(line)
             
             #move mouse x y
             elif line.startswith("move mouse to"):
@@ -232,7 +151,7 @@ class ttvController:
                     if(int(dur[3]) <= self.win.xMax and int(dur[4])*-1 <= self.win.yMax):
                         self.win.moveMouse(int(dur[3]), int(dur[4]))
                 else:
-                    arrowKey(line)
+                    osrs.arrowKey(line)
             
             elif line.startswith("center mouse"):
                 self.win.moveMouse(260, 210)
@@ -244,7 +163,7 @@ class ttvController:
                     if(int(dur[2]) <= 400 and int(dur[3]) <= 400):
                         self.win.moveMouseRelative(int(dur[2]), int(dur[3])*-1)
                 else:
-                    arrowKey(line)
+                    osrs.arrowKey(line)
             
             #click on a certain menu item
             elif line.startswith("menu") or line.startswith("m"):
@@ -254,49 +173,49 @@ class ttvController:
                         self.osrs.menuClick(int(dur[1]))
             elif line=="zoom in" or line=="zoom out":
                 self.win.moveMouse(260, 210)
-                zoom(line.split(' ')[1])
+                osrs.zoom(line.split(' ')[1])
             elif line=="scroll up"or line=="scroll down":
-                zoom(line.split(' ')[1])
+                osrs.zoom(line.split(' ')[1])
 
             elif line == "space" or line == "spacebar": 
-                keyPress("space")
+                osrs.keyPress("space")
             
             elif line == "combat" or line == "style" or line == "attack style": 
-                keyPress("F1")
+                osrs.keyPress("F1")
             
             elif line == "stats" or line == "exp": 
-                keyPress("F2")
+                osrs.keyPress("F2")
             
             elif line == "chat channel" or line == "minigame" or line == "clan" or line == "group": 
-                keyPress("F10")
+                osrs.keyPress("F10")
             
             elif line == "quests":
-                keyPress("F3")
+                osrs.keyPress("F3")
             
             
             elif line == "i" or line == "inv" or line == "inventory": 
-                keyPress("F4")
+                osrs.keyPress("F4")
             
             elif line == "gear" or line == "equip" or line == "equipment": 
-                keyPress("F5")
+                osrs.keyPress("F5")
 
             elif line == "prayers": 
-                keyPress("F6")
+                osrs.keyPress("F6")
             
             elif line == "spells" or line == "spellbook": 
-                keyPress("F7")
+                osrs.keyPress("F7")
             
             elif line == "emote" or line == "emotes": 
-                keyPress("F11")
+                osrs.keyPress("F11")
             
             elif line == "music" or line == "song" or line =="songs": 
-                keyPress("F12")
+                osrs.keyPress("F12")
 
             if line.isnumeric():
                 try:
                     num = re.split("[^\d]", line)[0][0]
                     if(int(num)):
-                        keyPress(num)
+                        osrs.keyPress(num)
                 except:
                     return
             try:
@@ -312,3 +231,67 @@ class ttvController:
             pyautogui.keyDown("Escape")
             time.sleep(0.25) 
             pyautogui.keyUp("Escape")
+
+class winSize:
+    def __init__(self):
+        self.xMax = 760
+        self.yMax = 480
+        self.xMin = 0 
+        self.yMin = 25
+
+    # Ensure target is within window
+    def check_x(self,x):
+        return x < self.xMax and x > self.xMin
+    def check_y(self,y):
+        return y < self.yMax and y > self.yMin
+
+    # Return mouse positions
+    def mouse_x_pos(self):
+        return pyautogui.position()[0]
+    def mouse_y_pos(self):
+        return pyautogui.position()[1]
+    
+    # Mouse moving functions, one absolute the other relative to curr pos
+    def moveMouse(self, x, y):
+        if self.check_x(x) and self.check_y(y):
+            pyautogui.moveTo(x, y)
+    def moveMouseRelative(self, x, y):
+        if self.check_x(x + self.mouse_x_pos()) and self.check_y(y + self.mouse_y_pos()):
+            pyautogui.moveTo(x, y)
+
+
+
+#Handles reading twitch chat and passes it to TTVController
+def main(): 
+
+    server = 'irc.chat.twitch.tv'
+    port = 6667
+    nickname = 'newtwitchplaysosrs'
+
+    sock = socket.socket()
+
+    sock.connect((server, port))
+    sock.send(f"PASS {token}\n".encode('utf-8'))
+    sock.send(f"NICK {nickname}\n".encode('utf-8'))
+    sock.send(f"JOIN {channel}\n".encode('utf-8'))
+
+    print("Started")
+
+    ttvController = TtvController()
+
+    while True:
+        resp = sock.recv(2048).decode('utf-8')
+
+        if resp.startswith('PING'):
+            sock.send("PONG\n".encode('utf-8'))
+        
+        elif len(resp) > 0:
+            print(resp)
+            try:
+                ttvController.readChat(resp)
+            except:
+                print("An exception occurred")
+        
+        time.sleep(0.6)
+
+main()
