@@ -34,7 +34,7 @@ def main():
             except Exception as e: 
                 print(e)
         
-        time.sleep(7)
+        time.sleep(0.1)
 
 
 main()

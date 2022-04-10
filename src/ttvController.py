@@ -153,7 +153,6 @@ class TtvController:
                     if(dir[1] in ["bot left", "bottom left", "bl", "dl", "down left"]):
                         self.win.moveMouse((600, 150))
                         pyautogui.click()
-                    #TODO add diagonal options
 
                 elif self.validation.validEscape(line):
                     pyautogui.keyDown("Escape")
@@ -161,7 +160,7 @@ class TtvController:
                     pyautogui.keyUp("Escape")
                 
                 elif self.validation.validQuickUse(line):
-                    self.osrs.clickInv('a', 1)
+                    self.osrs.clickInv('w', 1)
                 
                 
                 elif self.validation.validClick(line): 
