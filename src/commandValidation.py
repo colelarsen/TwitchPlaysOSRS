@@ -12,9 +12,23 @@ class ValidationController:
             return self.osrs.checkInvCoord(line[0], num)
         return False
     
+    def validInvRClick(self, line):
+        print(line)
+        if re.match("r[w-z][1-7][^0-9]?.*", line):
+            num = utility.getFirstNumber(line)
+            return self.osrs.checkInvCoord(line[1], num)
+        return False
+    
     def validMainLClick(self, line):
         if re.match("[a-t][1-9][0-3]?.*", line):
             letter = line[0]
+            num = utility.getFirstNumber(line)
+            return self.osrs.checkMainCoord(letter, num)
+        return False
+    
+    def validMainRClick(self, line):
+        if re.match("r[a-t][1-9][0-3]?.*", line):
+            letter = line[1]
             num = utility.getFirstNumber(line)
             return self.osrs.checkMainCoord(letter, num)
         return False

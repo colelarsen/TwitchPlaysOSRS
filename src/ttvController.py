@@ -65,9 +65,10 @@ class TtvController:
         line = lineRaw.lower()
         print(line)
 
-        tester = imagesearch("Images/loginscreen.PNG", 0.8)
-        bankPin = imagesearch("Images/bankPin.PNG", 0.8)
-        if tester[0] == -1 and bankPin[0] == -1:
+        # tester = imagesearch("Images/loginscreen.PNG", 0.8)
+        # bankPin = imagesearch("Images/bankPin.PNG", 0.8)
+        # if tester[0] == -1 and bankPin[0] == -1:
+        if True:
         
             num = utility.getFirstNumber(line)
             #Check if the input line should left click on inv
@@ -81,6 +82,14 @@ class TtvController:
             elif self.validation.validDrop(line):
                 coords = line.split(' ')[1].strip()
                 self.osrs.dropItem(coords[0], num)
+            
+            #right click inventory spot
+            elif self.validation.validInvRClick(line): 
+                self.osrs.clickInv(line[1], num, True)
+            
+            #right click main
+            elif self.validation.validMainRClick(line): 
+                self.osrs.clickMain(line[1], num, True)
 
             elif line.startswith("mm ") or line.startswith("m ") or line.startswith("map "): 
                 dir = line.split(' ')
@@ -98,16 +107,7 @@ class TtvController:
                     pyautogui.click()
                 #TODO add diagonal options
 
-            
-            #irc right click inventory spot
-            elif "irc" in line: 
-                #perform right click on coordinates given
-                coords = line.split(' ')[1].strip()
-                num = int(re.split("[^\d]", coords)[1])
-                if coords[0] in ['a', 'b', 'c', 'd'] and num < 8 and num >= 0:
-                    self.osrs.clickInv(coords[0], num, True)
-
-            elif "esc"==line or "cancel"==line or "escape"==line:
+            elif line in ["escape", "cancel", "quit", "exit"]: 
                 pyautogui.keyDown("Escape")
                 time.sleep(0.25) 
                 pyautogui.keyUp("Escape")
@@ -116,21 +116,11 @@ class TtvController:
                 self.osrs.clickInv('a', 1)
             
             
-            elif "lc"==line or "click"==line: 
+            elif line in ["c", "lc", "click"]: 
                 pyautogui.click()
-            elif "rc"==line or "right click"==line: 
+            elif line in ["r", "rc", "right click"]: 
                 pyautogui.click(button="right")
 
-            
-            
-            #rc a12 - right click on grid
-            elif "rc" in line: 
-                #perform right click on coordinates given
-                coords = line.split(' ')[1].strip()
-                letter = coords[0]
-                num = int(re.split("[^\d]", coords)[1])
-                if osrs.checkMainCoord(letter, num):
-                    self.osrs.clickMain(letter, num, True)
             
             #reset, reset camera, compass - Reset camera
             elif line=="stop":
@@ -138,32 +128,36 @@ class TtvController:
                 pyautogui.click()
             
             #reset, reset camera, compass - Reset camera
-            elif line=="reset" or line=="reset camera" or line=="compass":
+            elif line in ["reset", "reset camera", "compass"]:
                 self.osrs.uiButtons.clickCompass()
             #run, walk - run
-            elif line=="run" or line=="walk" or line=="sprint":
+            elif line in ["run", "walk", "sprint"]:
                 self.osrs.uiButtons.clickRun()
             #sa, special, special attack - special attack
-            elif line=="sa" or line=="special" or line=="special attack":
+            elif line in ["sa", "special", "special attack"]:
                 self.osrs.uiButtons.clickSpecial()
             #pray, prayer - prayer on
-            elif line=="pray" or line=="prayer":
+            elif line in ["pray", "prayer"]:
                 self.osrs.uiButtons.clickPrayer()
             
             elif line.startswith("say: "):
                 pyautogui.write(line.split("say: ")[1], interval=0.1)
                 pyautogui.keyDown("Enter")
-                time.sleep(0.25) 
+                time.sleep(0.1) 
                 pyautogui.keyUp("Enter")
             
             #direction dur(optional)
-            elif line.startswith("left") or line.startswith("up") or line.startswith("right") or line.startswith("down"):
-                dur = line.split(' ')
-                if len(dur) == 2:
-                    if(int(dur[1]) <= 3000):
-                        osrs.arrowKey(dur[0], int(dur[1]))
-                else:
-                    osrs.arrowKey(line)
+            elif line.startswith("cam ") or line.startswith("c "):
+                lineWords = line.split(' ')
+                dir = lineWords[1]
+                
+                if dir in ["left", "right", "down", "up"]:
+                    if len(lineWords) == 2:
+                        dur = lineWords[2]
+                        if(int(dur[1]) <= 3000):
+                            osrs.arrowKey(dir, int(dur[1]))
+                    else:
+                        osrs.arrowKey(dir)
             
             #move mouse x y
             elif line.startswith("move mouse to"):
@@ -245,10 +239,10 @@ class TtvController:
                     self.osrs.clickMain(line[0], int(re.split("[^\d]", line)[1]))
             except:
                 return
-        elif tester[0] != -1:
-            if line == "login":
-                self.osrs.login()
-        elif bankPin[0] != -1:
-            pyautogui.keyDown("Escape")
-            time.sleep(0.25) 
-            pyautogui.keyUp("Escape")
+        # elif tester[0] != -1:
+        #     if line == "login":
+        #         self.osrs.login()
+        # elif bankPin[0] != -1:
+        #     pyautogui.keyDown("Escape")
+        #     time.sleep(0.25) 
+        #     pyautogui.keyUp("Escape")
