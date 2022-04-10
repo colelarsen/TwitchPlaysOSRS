@@ -18,6 +18,9 @@ class winSize:
         self.xMin = 0 
         self.yMin = 25
 
+        self.xCenter = (self.xMax - self.xMin) / 2
+        self.yCenter = (self.yMax - self.yMin) / 2
+
     # Ensure target is within window
     def check_x(self,x):
         return x < self.xMax and x > self.xMin
