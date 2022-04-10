@@ -141,6 +141,7 @@ class osrsController:
         return letter in self.inv.cols and num in self.inv.rows
 
     def logout(self):
+        pass
 
     def login(self):
         isOnMainScreen = imagesearch("Images/loginscreen.PNG", 0.8)
