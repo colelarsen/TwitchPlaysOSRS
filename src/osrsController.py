@@ -24,6 +24,11 @@ class osrsController:
             self.StartY = 40
             self.SqWidth = 25.5
             self.SqHeight = 25.5
+            self.endX = self.StartX + self.SqWidth * len(self.cols)
+            self.endY = self.StartY + self.SqHeight * len(self.rows)
+            self.centerX = self.endX - self.StartX / 2
+            self.centerY = self.endY - self.StartY / 2
+
 
     class invGrid:
         def __init__(self):
@@ -88,6 +93,26 @@ class osrsController:
             time.sleep(0.25)
             pyautogui.click()
 
+    def move_dir(self, dir, num = 1):
+
+        x = self.main.centerX
+        y = self.main.centerY
+
+        if dir in ['left','right','up','down'] and num < 7:
+            if dir == 'left':
+                x = self.main.centerX - (self.main.SqWidth * num)
+            elif dir == 'right':
+                x = self.main.centerX + (self.main.SqWidth * num)
+            elif dir == 'up':
+                y = self.main.centerY - (self.main.SqHeight * num)
+            elif dir == 'down':
+                y = self.main.centerX + (self.main.SqHeight * num)
+
+            self.win.moveMouse([x,y])
+            pyautogui.click()
+        
+
+
     def dropItem(self, letter, number):
         self.win.moveMouse(self.inv_pos(letter,number))
         pyautogui.keyDown("shift")
@@ -101,6 +126,8 @@ class osrsController:
 
     def checkInvCoord(self, letter, num):
         return letter in self.inv.cols and num in self.inv.rows
+
+    def logout(self):
 
     def login(self):
         isOnMainScreen = imagesearch("Images/loginscreen.PNG", 0.8)
