@@ -122,6 +122,22 @@ class osrsController:
             self.win.moveMouse(430, 320)
             time.sleep(0.25)
             pyautogui.click()
+    
+    def arrowKey(self, key, dur=250):
+        pyautogui.keyDown(key)
+        time.sleep(dur/1000)
+        pyautogui.keyUp(key)
+
+    def zoom(self, dir, tick=500):
+        if dir=="up" or dir=="in":
+            pyautogui.scroll(tick)
+            print(tick)
+        elif dir=="down" or dir=="out":
+            pyautogui.scroll(-tick)
+    def keyPress(self, key):
+        pyautogui.keyDown(key)
+        time.sleep(0.1)
+        pyautogui.keyUp(key)
 
 
 
