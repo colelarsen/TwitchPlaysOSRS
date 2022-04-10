@@ -123,6 +123,18 @@ class osrsController:
             time.sleep(0.25)
             pyautogui.click()
 
+    def calibration(self):
+        for i in range(len(self.main.cols)):
+            for j in range(len(self.main.rows)):
+                self.moveMouse(self.main.StartX + self.main.SqWidth*i, self.main.StartY + self.main.SqHeight*j)
+                time.sleep(0.001)
+        
+        self.moveMouse(self.inv.StartX,self.inv.StartY)
+        for i in range(0, 4):
+            for j in range(0, 7):
+                self.moveMouse(self.inv.StartX + self.inv.SqWidth*i, self.inv.StartY + self.inv.SqHeight*j)
+                time.sleep(0.01)
+
 
 
 
