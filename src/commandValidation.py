@@ -17,27 +17,36 @@ class ValidationController:
 
 
     def validInvLClick(self, line):
-        if re.match("([w-z][1-9][0-3]?)( +.*)?", line):
+        if re.match("^([w-z][1-9][0-3]?)( +.*)?$", line):
             num = utility.getFirstNumber(line)
             return self.osrs.checkInvCoord(line[0], num)
         return False
     
     def validInvRClick(self, line):
-        print(line)
-        if re.match("(r[w-z][1-9][0-3]?)( +.*)?", line):
+        if re.match("^(r[w-z][1-9])( +.*)?$", line):
             num = utility.getFirstNumber(line)
             return self.osrs.checkInvCoord(line[1], num)
         return False
     
+    def validDrag(self, line):
+        if re.match("^drag ?([w-z][1-9]) ?([w-z][1-9])( +.*)?$", line):
+            lineWords = line.split(' ')
+            firstBar = lineWords[1]
+            secondBar = lineWords[2]
+            num1 = utility.getFirstNumber(firstBar)
+            num2 = utility.getFirstNumber(secondBar)
+            return self.osrs.checkInvCoord(firstBar[0], num1) and self.osrs.checkInvCoord(secondBar[0], num2)
+        return False
+    
     def validMainLClick(self, line):
-        if re.match("([a-t][1-9][0-3]?)( +.*)?", line):
+        if re.match("^([a-t][1-9][0-3]?)( +.*)?$", line):
             letter = line[0]
             num = utility.getFirstNumber(line)
             return self.osrs.checkMainCoord(letter, num)
         return False
     
     def validMainRClick(self, line):
-        if re.match("(r[a-t][1-9][0-3]?)( +.*)?", line):
+        if re.match("^(r[a-t][1-9][0-3]?)( +.*)?$", line):
             letter = line[1]
             num = utility.getFirstNumber(line)
             return self.osrs.checkMainCoord(letter, num)
@@ -45,14 +54,14 @@ class ValidationController:
     
     def validDrop(self, line):
         #perform left click on coordinates given
-        if re.match("(drop [w-z][1-7])( +.*)?", line): 
+        if re.match("^(drop [w-z][1-7])( +.*)?$", line): 
             coords = line.split(' ')[1].strip()
             num = utility.getFirstNumber(coords)
             return self.osrs.checkInvCoord(coords[0], num)
         return False
     
     def validMapMove(self, line):
-        if re.match("([map, m, mm] +[top, t, bottom, b, bot, down, d, left, l, right, r])( +.*)?", line): 
+        if re.match("^([map, m, mm] ((tr)|(ur)|(br)|(bl)|(ul)|(tl)|(bottom)|(top)|(bot)|(down)|(left)|(right)|(t)|(b)|(d)|(l)|(r)))( +.*)?$", line): 
             return True
         return False
     
@@ -84,7 +93,7 @@ class ValidationController:
         return line in ["pray", "prayer"]
     
     def validSay(self, line):
-        if(re.match("say: ((?!::).)*$", line)):
+        if(re.match("^say: ((?!::).)*$", line)):
             return True
         return False
     
@@ -115,7 +124,7 @@ class ValidationController:
         return line.startswith("center mouse")
     
     def validMenu(self, line):
-        if re.match("(m|menu) [0-9]( +.*)?", line):
+        if re.match("^(m|menu) [0-9]( +.*)?$", line):
             return True
         return False
     
@@ -126,7 +135,9 @@ class ValidationController:
         return line=="scroll up"or line=="scroll down"
     
     def validSpace(self, line):
-        return line in ["space", "spacebar"]
+        if re.match("^((spacebar)|(space))( [0-9]+)?( +.*)?$", line):
+            return True
+        return False
     
     def validCombat(self, line):
         return  line == "combat" or line == "style" or line == "attack style"

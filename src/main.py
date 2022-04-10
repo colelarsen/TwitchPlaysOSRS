@@ -23,7 +23,7 @@ def main():
 
     while True:
         resp = sock.recv(2048).decode('utf-8')
-        print(resp)
+        #print(resp)
 
         if resp.startswith('PING'):
             sock.send("PONG\n".encode('utf-8'))
@@ -39,13 +39,12 @@ def main():
 
 # main()
 
-
 def testSingle(): 
     ttvCont = ttv.TtvController()
     try:
-        ttvCont.parseChat("say: hello")
+        ttvCont.parseChat("ra4")
     except Exception as e: 
         print(e)
 
-time.sleep(4)
+# time.sleep(4)
 testSingle()

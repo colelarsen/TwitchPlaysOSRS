@@ -102,6 +102,11 @@ class osrsController:
         pyautogui.click()
         time.sleep(0.1)
         pyautogui.keyUp("shift")
+    
+    def dragItem(self, l1, n1, l2, n2):
+        self.win.moveMouse(self.inv_pos(l1,n1))
+        tupleCoords = self.inv_pos(l2,n2)
+        pyautogui.dragTo(tupleCoords[0], tupleCoords[1], duration=0.1)
 
     def checkMainCoord(self, letter, num):
         return letter in self.main.cols and num in self.main.rows
@@ -130,9 +135,9 @@ class osrsController:
             time.sleep(0.25)
             pyautogui.click()
     
-    def arrowKey(self, key, dur=250):
+    def arrowKey(self, key, sleepTimer=250):
         pyautogui.keyDown(key)
-        time.sleep(dur/1000)
+        time.sleep(sleepTimer/1000)
         pyautogui.keyUp(key)
 
     def zoom(self, dir, tick=500):
@@ -141,9 +146,10 @@ class osrsController:
             print(tick)
         elif dir=="down" or dir=="out":
             pyautogui.scroll(-tick)
-    def keyPress(self, key):
+
+    def keyPress(self, key, sleepTimer=100):
         pyautogui.keyDown(key)
-        time.sleep(0.1)
+        time.sleep(sleepTimer/1000)
         pyautogui.keyUp(key)
 
     def calibration(self):

@@ -88,7 +88,7 @@ class TtvController:
             
 
             elif not isOnLoginScreen and not isOnBankPinScreen:
-            # elif True:
+            # elif True: #uncomment this when you want to do some debugging locally without checking for bank shit
                 num = utility.getFirstNumber(line)
 
 
@@ -113,6 +113,15 @@ class TtvController:
                 #right click main
                 elif self.validation.validMainRClick(line): 
                     self.osrs.clickMain(line[1], num, True)
+                
+                #right click main
+                elif self.validation.validDrag(line): 
+                    lineWords = line.split(' ')
+                    firstBar = lineWords[1]
+                    secondBar = lineWords[2]
+                    num1 = utility.getFirstNumber(firstBar)
+                    num2 = utility.getFirstNumber(secondBar)
+                    self.osrs.dragItem(firstBar[0], num1, secondBar[0], num2)
 
                 elif self.validation.validMapMove(line): 
                     dir = line.split(' ')
@@ -127,6 +136,19 @@ class TtvController:
                         pyautogui.click()
                     if(dir[1] in ["right", "r"]):
                         self.win.moveMouse((710, 100))
+                        pyautogui.click()
+
+                    if(dir[1] in ["top right", "tr", "ur", "up right"]):
+                        self.win.moveMouse((710, 60))
+                        pyautogui.click()
+                    if(dir[1] in ["top left", "tl", "ul", "up left"]):
+                        self.win.moveMouse((600, 60))
+                        pyautogui.click()
+                    if(dir[1] in ["bot right", "bottom right", "br", "dr", "down right"]):
+                        self.win.moveMouse((710, 150))
+                        pyautogui.click()
+                    if(dir[1] in ["bot left", "bottom left", "bl", "dl", "down left"]):
+                        self.win.moveMouse((600, 150))
                         pyautogui.click()
                     #TODO add diagonal options
 
@@ -198,14 +220,22 @@ class TtvController:
 
                 elif self.validation.validZoom(line):
                     self.win.moveMouse(260, 210)
-                    osrs.zoom(line.split(' ')[1])
+                    self.osrs.zoom(line.split(' ')[1])
 
                 elif self.validation.validScroll(line):
-                    osrs.zoom(line.split(' ')[1])
+                    self.osrs.zoom(line.split(' ')[1])
 
                 elif self.validation.validSpace(line): 
-                    osrs.keyPress("space")
-                
+                    lineWords = line.split(' ')
+                    if len(lineWords) > 1 and lineWords[1].isnumeric():
+                        number = int(lineWords[1])
+                        if number <= 3000:
+                            self.osrs.keyPress("space", number)
+                    else:
+                        self.osrs.keyPress("space")
+
+
+
                 elif self.validation.validCombat(line): 
                     osrs.keyPress("F1")
                 
@@ -245,6 +275,5 @@ class TtvController:
                 else:
                     wasValidLine = False
         else:
-            print("Was not valid input")
             wasValidLine = False
         return wasValidLine
