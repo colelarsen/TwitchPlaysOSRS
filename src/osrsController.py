@@ -53,6 +53,7 @@ class osrsController:
         def clickSpecial(self): 
             pyautogui.click(self.special)
 
+
     # click some number of menu items below current pos
     def menuClick(self, num):
         self.win.moveMouseRelative(0, 20)
@@ -87,6 +88,12 @@ class osrsController:
         else:
             time.sleep(0.25)
             pyautogui.click()
+    
+    def typeText(self, line):
+        pyautogui.write(line.split("say: ")[1][0:40], interval=0.1)
+        pyautogui.keyDown("Enter")
+        time.sleep(0.1) 
+        pyautogui.keyUp("Enter")
 
     def dropItem(self, letter, number):
         self.win.moveMouse(self.inv_pos(letter,number))
@@ -107,7 +114,7 @@ class osrsController:
         if isOnMainScreen[0] != -1:
             isOnDC = imagesearch("Images/disconnectscreen.PNG", 0.8)
             if isOnDC[0] != -1:
-                self.win.moveMouse(430, 320)
+                self.win.moveMouse((430, 320))
                 pyautogui.click()
             pyautogui.keyDown("enter")
             time.sleep(0.1)
@@ -119,7 +126,7 @@ class osrsController:
             pyautogui.keyUp("Enter")
 
             time.sleep(10)
-            self.win.moveMouse(430, 320)
+            self.win.moveMouse((430, 320))
             time.sleep(0.25)
             pyautogui.click()
     
@@ -142,13 +149,13 @@ class osrsController:
     def calibration(self):
         for i in range(len(self.main.cols)):
             for j in range(len(self.main.rows)):
-                self.moveMouse(self.main.StartX + self.main.SqWidth*i, self.main.StartY + self.main.SqHeight*j)
+                self.moveMouse((self.main.StartX + self.main.SqWidth*i, self.main.StartY + self.main.SqHeight*j))
                 time.sleep(0.001)
         
-        self.moveMouse(self.inv.StartX,self.inv.StartY)
+        self.moveMouse((self.inv.StartX,self.inv.StartY))
         for i in range(0, 4):
             for j in range(0, 7):
-                self.moveMouse(self.inv.StartX + self.inv.SqWidth*i, self.inv.StartY + self.inv.SqHeight*j)
+                self.moveMouse((self.inv.StartX + self.inv.SqWidth*i, self.inv.StartY + self.inv.SqHeight*j))
                 time.sleep(0.01)
 
 
