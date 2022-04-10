@@ -155,12 +155,12 @@ class TtvController:
                 dir = lineWords[1]
                 
                 if dir in ["left", "right", "down", "up"]:
-                    if len(lineWords) == 2:
+                    if len(lineWords) == 3:
                         dur = lineWords[2]
-                        if(int(dur[1]) <= 3000):
-                            osrs.arrowKey(dir, int(dur[1]))
+                        if(num <= 3000):
+                            self.osrs.arrowKey(dir,num)
                     else:
-                        osrs.arrowKey(dir)
+                        self.osrs.arrowKey(dir)
             
             #move mouse x y
             elif line.startswith("move mouse to"):
