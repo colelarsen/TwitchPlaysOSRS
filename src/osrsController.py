@@ -42,7 +42,7 @@ class osrsController:
     class uiButtons:
         def __init__(self):
             self.prayer = (560, 117) # TODO: Flags to know whether run is on or off
-            self.run = (560, 117)
+            self.run = (570, 150)
             self.compass = (565, 48)
             self.special = (600, 175)
 

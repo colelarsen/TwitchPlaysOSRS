@@ -39,12 +39,4 @@ def main():
 
 main()
 
-def testSingle(): 
-    ttvCont = ttv.TtvController()
-    try:
-        ttvCont.parseChat("stop")
-    except Exception as e: 
-        print(e)
 
-# time.sleep(4)
-# testSingle()

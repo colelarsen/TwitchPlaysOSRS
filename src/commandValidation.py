@@ -7,6 +7,7 @@ class ValidationController:
         self.osrs = osrs
         self.win = win
     
+
     def isValidInput(self, line):
         public_method_names = [method for method in dir(self) if callable(getattr(self, method)) if not method.startswith('_') if not method.startswith("isValidInput")]  # 'private' methods start from _
         for method in public_method_names:
@@ -66,7 +67,7 @@ class ValidationController:
         return False
     
     def validEscape(self, line):
-        return line in ["escape", "cancel", "quit", "exit"]
+        return line in ["escape", "cancel", "quit", "exit", "esc"]
     
     def validQuickUse(self, line):
         return "qu"==line or line.startswith("qu ")
