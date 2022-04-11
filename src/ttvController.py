@@ -156,7 +156,7 @@ class TtvController:
 
                 elif self.validation.validEscape(line):
                     pyautogui.keyDown("Escape")
-                    time.sleep(0.25) 
+                    time.sleep(0.1) 
                     pyautogui.keyUp("Escape")
                 
                 elif self.validation.validQuickUse(line):
@@ -231,8 +231,9 @@ class TtvController:
                     lineWords = line.split(' ')
                     if len(lineWords) > 1 and lineWords[1].isnumeric():
                         number = int(lineWords[1])
-                        if number <= 3000:
-                            self.osrs.keyPress("space", number)
+                        if number <= 10000:
+                            x = threading.Thread(target=self.osrs.keyPress, args=('space',number,))
+                            x.start()
                     else:
                         self.osrs.keyPress("space")
 
@@ -269,9 +270,10 @@ class TtvController:
                     self.osrs.keyPress("F12")
 
                 #If the entire line is a number get the first number
-                elif self.validation.validNumerical():
+                elif self.validation.validNumerical(line):
                     #GET THE FIRST DIGIT of the first line
                     firstNum = re.split("[^\d]", line)[0][0]
+                    print(firstNum)
                     if(int(firstNum)):
                         self.osrs.keyPress(firstNum)
                 else:
