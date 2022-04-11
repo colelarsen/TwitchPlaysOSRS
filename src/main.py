@@ -37,14 +37,14 @@ def main():
         time.sleep(0.1)
 
 
-main()
+# main()
 
 def testSingle(): 
     ttvCont = ttv.TtvController()
     try:
-        ttvCont.parseChat("m 2")
+        ttvCont.parseChat("stop")
     except Exception as e: 
         print(e)
 
 # time.sleep(4)
-# testSingle()
+testSingle()

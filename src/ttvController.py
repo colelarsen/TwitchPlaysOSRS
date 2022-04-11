@@ -171,7 +171,7 @@ class TtvController:
                 
                 #reset, reset camera, compass - Reset camera
                 elif self.validation.validStop(line):
-                    self.win.moveMouse(260, 210)
+                    self.win.moveMouse((260, 210))
                     pyautogui.click()
                 
                 #reset, reset camera, compass - Reset camera
