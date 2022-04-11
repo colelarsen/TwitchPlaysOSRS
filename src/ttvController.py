@@ -45,7 +45,7 @@ class winSize:
         x = coords[0]
         y = coords[1]
         if self.check_x(x + self.mouse_x_pos()) and self.check_y(y + self.mouse_y_pos()):
-            pyautogui.moveTo(x, y)
+            pyautogui.moveTo(x + self.mouse_x_pos(), y + self.mouse_y_pos())
 
 
 class TtvController:
@@ -239,34 +239,34 @@ class TtvController:
 
 
                 elif self.validation.validCombat(line): 
-                    osrs.keyPress("F1")
+                    self.osrs.keyPress("F1")
                 
                 elif self.validation.validStats(line): 
-                    osrs.keyPress("F2")
+                    self.osrs.keyPress("F2")
                 
                 elif self.validation.validGroup(line): 
-                    osrs.keyPress("F10")
+                    self.osrs.keyPress("F10")
                 
                 elif self.validation.validQuests(line): 
-                    osrs.keyPress("F3")
+                    self.osrs.keyPress("F3")
                 
                 elif self.validation.validInv(line): 
-                    osrs.keyPress("F4")
+                    self.osrs.keyPress("F4")
                 
                 elif self.validation.validGear(line):
-                    osrs.keyPress("F5")
+                    self.osrs.keyPress("F5")
 
                 elif self.validation.validPrayers(line): 
-                    osrs.keyPress("F6")
+                    self.osrs.keyPress("F6")
                 
                 elif self.validation.validSpells(line): 
-                    osrs.keyPress("F7")
+                    self.osrs.keyPress("F7")
                 
                 elif self.validation.validEmotes(line): 
-                    osrs.keyPress("F11")
+                    self.osrs.keyPress("F11")
                 
                 elif self.validation.validMusic(line):
-                    osrs.keyPress("F12")
+                    self.osrs.keyPress("F12")
 
                 #If the entire line is a number get the first number
                 elif self.validation.validNumerical():

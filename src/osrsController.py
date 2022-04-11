@@ -61,8 +61,8 @@ class osrsController:
 
     # click some number of menu items below current pos
     def menuClick(self, num):
-        self.win.moveMouseRelative(0, 20)
-        self.win.moveMouseRelative(0, 15.8*(num-1))
+        self.win.moveMouseRelative((0, 20))
+        self.win.moveMouseRelative((0, 15.8*(num-1)))
         pyautogui.click()
 
     ## Get Coords for some position in inventory grid

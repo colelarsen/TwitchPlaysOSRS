@@ -42,7 +42,7 @@ main()
 def testSingle(): 
     ttvCont = ttv.TtvController()
     try:
-        ttvCont.parseChat("move mouse to 100 100")
+        ttvCont.parseChat("m 2")
     except Exception as e: 
         print(e)
 
