@@ -95,8 +95,14 @@ class osrsController:
             time.sleep(0.25)
             pyautogui.click()
     
-    def typeText(self, line):
-        pyautogui.write(line.split("say: ")[1][0:40], interval=0.1)
+    def typeText(self, line, enter = False):
+        text = " ".join(line.split(" ")[1:][0:100])
+        print(text)
+        pyautogui.write(text, interval=0.1)
+        if enter:
+            self.pressEnter()
+
+    def pressEnter(self):
         pyautogui.keyDown("Enter")
         time.sleep(0.1) 
         pyautogui.keyUp("Enter")
