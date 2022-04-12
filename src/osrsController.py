@@ -69,7 +69,15 @@ class osrsController:
         def __init__(self):
             self.bankInv = (445, 340)
             self.bankEquip = (485, 340)
+            self.quantities = self.bankQuantities()
 
+        class bankQuantities:
+            def __init__(self):
+                self.q1 = (240, 350)
+                self.q5 = (262, 350)
+                self.q10 = (285, 350)
+                self.qX = (312, 350)
+                self.qAll = (340, 350)
 
         def depositInv(self):
             pyautogui.click(self.bankInv)
@@ -77,9 +85,17 @@ class osrsController:
         def depositEquip(self):
             pyautogui.click(self.bankEquip)
 
-        
-
-
+        def changeQuantity(self, which):
+            if which == '1':
+                pyautogui.click(self.quantities.q1)
+            elif which == '5':
+                pyautogui.click(self.quantities.q5)
+            elif which == '10':
+                pyautogui.click(self.quantities.q10)
+            elif which == 'x':
+                pyautogui.click(self.quantities.qX)
+            elif which == 'all':
+                pyautogui.click(self.quantities.qAll)
 
 
     # click some number of menu items below current pos

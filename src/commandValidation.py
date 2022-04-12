@@ -65,6 +65,11 @@ class ValidationController:
         if re.match("^((bank ))((inv|inventory|equipment|equip)( +.*)?)?$",line):
             return True
         return False
+
+    def validBankQuantity(self,line):
+        if re.match("^((bank ))((q1|q5|q10|qx|qall)( +.*)?)+",line):
+            return True
+        return False
     
     def validMapMove(self, line):
         if re.match("^((map)|(mm)|(m) ((tr)|(ur)|(br)|(bl)|(ul)|(tl)|(bottom)|(top)|(bot)|(down)|(left)|(right)|(t)|(b)|(d)|(l)|(r)))( +.*)?$", line): 

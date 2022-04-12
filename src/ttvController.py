@@ -204,6 +204,12 @@ class TtvController:
                     elif action in ['equip','equipment']:
                         self.osrs.bank.depositEquip()
 
+                elif self.validation.validBankQuantity(line):
+                    lineWords = line.split(' ')
+                    quantity = lineWords[1]
+                    self.osrs.bank.changeQuantity(quantity.split('q')[1])
+                
+
                     
                 
                 #direction dur(optional)
