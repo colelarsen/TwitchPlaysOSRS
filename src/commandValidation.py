@@ -175,5 +175,10 @@ class ValidationController:
     
     def validNumerical(self, line):
         return line.isnumeric()
+
+    def validDir(self,line):
+        if re.match("^((left)|(right)|(down)|(up)|(u)|(d)|(l)|(r))(( [1-7])( +[^1-7].*)?)?$", line):
+           return True
+        return False 
     
     
