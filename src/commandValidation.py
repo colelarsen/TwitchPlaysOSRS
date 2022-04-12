@@ -49,11 +49,16 @@ class ValidationController:
             return True
         return False
     
-    def validZoom(self, line):
-        return line=="zoom in" or line=="zoom out"
+    def validZoom(self, line): # Identical, merge
+        if re.match("^(zoom) (in|out)( [1-5]?( +.*)?)?",line):
+            return line
+        return False
     
     def validScroll(self, line):
-        return line=="scroll up"or line=="scroll down"
+        if re.match("^(scroll) (in|out)( [1-5]?( +.*)?)?",line):
+            return line
+        return False
+        #return line=="scroll up"or line=="scroll down"
 
     #####################################################################
     
