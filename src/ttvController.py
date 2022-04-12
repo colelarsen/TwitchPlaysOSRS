@@ -195,6 +195,15 @@ class TtvController:
                 elif self.validation.validType(line):
                     x = threading.Thread(target=self.osrs.typeText, args=(line,))
                     x.start()
+
+                elif self.validation.validBankDeposit(line):
+                    lineWords = line.split(' ')
+                    action = lineWords[1]
+                    if action in ['inv','inventory']:
+                        self.osrs.bank.depositInv() 
+                    elif action in ['equip','equipment']:
+                        self.osrs.bank.depositEquip()
+
                     
                 
                 #direction dur(optional)

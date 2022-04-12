@@ -60,6 +60,11 @@ class ValidationController:
             num = utility.getFirstNumber(coords)
             return self.osrs.checkInvCoord(coords[0], num)
         return False
+
+    def validBankDeposit(self,line):
+        if re.match("^((bank ))((inv|inventory|equipment|equip)( +.*)?)?$",line):
+            return True
+        return False
     
     def validMapMove(self, line):
         if re.match("^((map)|(mm)|(m) ((tr)|(ur)|(br)|(bl)|(ul)|(tl)|(bottom)|(top)|(bot)|(down)|(left)|(right)|(t)|(b)|(d)|(l)|(r)))( +.*)?$", line): 
@@ -120,7 +125,6 @@ class ValidationController:
             dir = lineWords[1]
             if dir in ['qtr','qtl']:
                 return True
-
         return False
     
     def validMouseMoveTo(self, line):

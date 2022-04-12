@@ -14,6 +14,7 @@ class osrsController:
         self.inv = self.invGrid()
         self.main = self.mainGrid()
         self.buttons = self.uiButtons()
+        self.bank = self.bankButtons()
         self.win = win
 
 
@@ -47,6 +48,7 @@ class osrsController:
             self.compass = (565, 48)
             self.special = (600, 175)
             self.logout = (650, 460)
+            
 
         def clickCompass(self): 
             pyautogui.click(self.compass)
@@ -62,6 +64,21 @@ class osrsController:
 
         def clickLogout(self):
             pyautogui.click(self.logout)
+
+    class bankButtons:
+        def __init__(self):
+            self.bankInv = (445, 340)
+            self.bankEquip = (485, 340)
+
+
+        def depositInv(self):
+            pyautogui.click(self.bankInv)
+
+        def depositEquip(self):
+            pyautogui.click(self.bankEquip)
+
+        
+
 
 
 
@@ -130,7 +147,10 @@ class osrsController:
             self.win.moveMouse([x,y])
             pyautogui.click()
         
-
+    def keyPress(self, key, sleepTimer=100):
+        pyautogui.keyDown(key)
+        time.sleep(sleepTimer/1000)
+        pyautogui.keyUp(key)
 
     def dropItem(self, letter, number):
         self.win.moveMouse(self.inv_pos(letter,number))
@@ -192,10 +212,7 @@ class osrsController:
         elif dir=="down" or dir=="out":
             pyautogui.scroll(-tick)
 
-    def keyPress(self, key, sleepTimer=100):
-        pyautogui.keyDown(key)
-        time.sleep(sleepTimer/1000)
-        pyautogui.keyUp(key)
+    
 
     def calibration(self):
         for i in range(len(self.main.cols)):
