@@ -11,15 +11,16 @@ class osrsController:
 
     def __init__(self, win):
 
-        self.inv = self.invGrid()
-        self.main = self.mainGrid()
+        self.inv = self.invGrid(win)
+        self.main = self.mainGrid(win)
         self.buttons = self.uiButtons()
         self.bank = self.bankButtons()
         self.win = win
 
 
     class mainGrid:
-        def __init__(self):
+        def __init__(self, win):
+            self.win = win
             self.cols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't']
             self.rows = range(1,14)
             self.StartX = 20
@@ -31,9 +32,48 @@ class osrsController:
             self.centerX = self.StartX + ((self.endX - self.StartX) / 2)
             self.centerY = self.StartY + ((self.endY - self.StartY) / 2)
 
+        def checkCoord(self, letter, num):
+            return letter in self.cols and num in self.rows
 
+        # Get coords for some pos in main screen grid
+        def pos(self,letter,num):
+            xCoord = self.StartX + (self.cols.index(letter) * self.SqWidth)
+            yCoord = self.StartY + ((num-1) * self.SqHeight)
+            return xCoord, yCoord
+
+
+        def clickPos(self, letter, number, right=False):
+            self.win.moveMouse(self.pos(letter,number))
+            if right: 
+                pyautogui.click(button="right")
+            else: 
+                time.sleep(0.25)
+                pyautogui.click()
+
+
+        def move_dir(self, dir, num = 1):
+
+            x = self.centerX
+            y = self.centerY
+
+            if dir in ['left','right','up','down'] and num < 7 and num > 0:
+                if dir == 'left':
+                    x = self.centerX - (self.SqWidth * num) - 10
+                elif dir == 'right':
+                    x = self.centerX + (self.SqWidth * num)
+                elif dir == 'up':
+                    y = self.centerY - (self.SqHeight * num)
+                elif dir == 'down':
+                    y = self.centerY + (self.SqHeight * (num)) + 15
+
+                self.win.moveMouse([x,y])
+                pyautogui.click()
+
+
+    
     class invGrid:
-        def __init__(self):
+        def __init__(self, win):
+            self.win = win
             self.cols = ['w','x','y','z']
             self.rows = range(1,8)
             self.StartX = 575
@@ -41,6 +81,44 @@ class osrsController:
             self.SqWidth = 45
             self.SqHeight = 37
 
+        def checkCoord(self, letter, num):
+            return letter in self.cols and num in self.rows
+
+        ## Get Coords for some position in inventory grid
+        def pos(self, letter, number):
+            xCoord = self.StartX + (self.cols.index(letter) * self.SqWidth)
+            yCoord = self.StartY + ((number-1) * self.SqHeight)
+            return xCoord, yCoord
+
+
+        def clickPos(self, letter, number, right=False):
+            self.win.moveMouse(self.pos(letter,number))
+            if right:     
+                pyautogui.click(button="right")
+            else:
+                time.sleep(0.25)
+                pyautogui.click()
+
+
+        def dropItem(self, letter, number):
+            self.win.moveMouse(self.pos(letter,number))
+            pyautogui.keyDown("shift")
+            time.sleep(0.1)
+            pyautogui.click()
+            time.sleep(0.1)
+            pyautogui.keyUp("shift")
+
+
+        def dragItem(self, l1, n1, l2, n2):
+            self.win.moveMouse(self.pos(l1,n1))
+            pyautogui.mouseDown()
+            time.sleep(0.05)
+            self.win.moveMouse(self.pos(l2,n2))
+            time.sleep(0.05)
+            pyautogui.mouseUp()
+
+
+        
     class uiButtons:
         def __init__(self):
             self.prayer = (560, 117) # TODO: Flags to know whether run is on or off
@@ -65,19 +143,42 @@ class osrsController:
         def clickLogout(self):
             pyautogui.click(self.logout)
 
+
+
+
     class bankButtons:
         def __init__(self):
             self.bankInv = (445, 340)
             self.bankEquip = (485, 340)
+            self.quantities = self.bankQuantities()
 
+        class bankQuantities:
+            def __init__(self):
+                self.q1 = (240, 350)
+                self.q5 = (262, 350)
+                self.q10 = (285, 350)
+                self.qX = (312, 350)
+                self.qAll = (340, 350)
 
         def depositInv(self):
             pyautogui.click(self.bankInv)
 
+
         def depositEquip(self):
             pyautogui.click(self.bankEquip)
 
-        
+
+        def changeQuantity(self, which):
+            if which == '1':
+                pyautogui.click(self.quantities.q1)
+            elif which == '5':
+                pyautogui.click(self.quantities.q5)
+            elif which == '10':
+                pyautogui.click(self.quantities.q10)
+            elif which == 'x':
+                pyautogui.click(self.quantities.qX)
+            elif which == 'all':
+                pyautogui.click(self.quantities.qAll)
 
 
 
@@ -87,35 +188,7 @@ class osrsController:
         self.win.moveMouseRelative((0, 20))
         self.win.moveMouseRelative((0, 15.8*(num-1)))
         pyautogui.click()
-
-    ## Get Coords for some position in inventory grid
-    def inv_pos(self, letter, number):
-        xCoord = self.inv.StartX + (self.inv.cols.index(letter) * self.inv.SqWidth)
-        yCoord = self.inv.StartY + ((number-1) * self.inv.SqHeight)
-        return xCoord, yCoord
-
-    # Get coords for some pos in main screen grid
-    def main_pos(self,letter,num):
-        xCoord = self.main.StartX + (self.main.cols.index(letter) * self.main.SqWidth)
-        yCoord = self.main.StartY + ((num-1) * self.main.SqHeight)
-        return xCoord, yCoord
-
-
-    def clickMain(self, letter, number, right=False):
-        self.win.moveMouse(self.main_pos(letter,number))
-        if right: 
-            pyautogui.click(button="right")
-        else: 
-            time.sleep(0.25)
-            pyautogui.click()
-
-    def clickInv(self, letter, number, right=False):
-        self.win.moveMouse(self.inv_pos(letter,number))
-        if right:     
-            pyautogui.click(button="right")
-        else:
-            time.sleep(0.25)
-            pyautogui.click()
+        
     
     def typeText(self, line, enter = False):
         text = " ".join(line.split(" ")[1:][0:100])
@@ -124,56 +197,32 @@ class osrsController:
         if enter:
             self.pressEnter()
 
+
     def pressEnter(self):
         pyautogui.keyDown("Enter")
         time.sleep(0.1) 
         pyautogui.keyUp("Enter")
 
-    def move_dir(self, dir, num = 1):
-
-        x = self.main.centerX
-        y = self.main.centerY
-
-        if dir in ['left','right','up','down'] and num < 7 and num > 0:
-            if dir == 'left':
-                x = self.main.centerX - (self.main.SqWidth * num) - 10
-            elif dir == 'right':
-                x = self.main.centerX + (self.main.SqWidth * num)
-            elif dir == 'up':
-                y = self.main.centerY - (self.main.SqHeight * num)
-            elif dir == 'down':
-                y = self.main.centerY + (self.main.SqHeight * (num)) + 15
-
-            self.win.moveMouse([x,y])
-            pyautogui.click()
         
     def keyPress(self, key, sleepTimer=100):
         pyautogui.keyDown(key)
         time.sleep(sleepTimer/1000)
         pyautogui.keyUp(key)
 
-    def dropItem(self, letter, number):
-        self.win.moveMouse(self.inv_pos(letter,number))
-        pyautogui.keyDown("shift")
-        time.sleep(0.1)
-        pyautogui.click()
-        time.sleep(0.1)
-        pyautogui.keyUp("shift")
-    
-    def dragItem(self, l1, n1, l2, n2):
-        self.win.moveMouse(self.inv_pos(l1,n1))
-        pyautogui.mouseDown()
-        time.sleep(0.05)
-        self.win.moveMouse(self.inv_pos(l2,n2))
-        time.sleep(0.05)
-        pyautogui.mouseUp()
-        
 
-    def checkMainCoord(self, letter, num):
-        return letter in self.main.cols and num in self.main.rows
+    def arrowKey(self, key, sleepTimer=250):
+        pyautogui.keyDown(key)
+        time.sleep(sleepTimer/1000)
+        pyautogui.keyUp(key)
 
-    def checkInvCoord(self, letter, num):
-        return letter in self.inv.cols and num in self.inv.rows
+
+    def zoom(self, dir, tick=500):
+        if dir=="up" or dir=="in":
+            pyautogui.scroll(tick)
+            print(tick)
+        elif dir=="down" or dir=="out":
+            pyautogui.scroll(-tick)
+
 
     def logout(self):
         self.buttons.clickLogout()
@@ -199,19 +248,6 @@ class osrsController:
             self.win.moveMouse((430, 320))
             time.sleep(0.25)
             pyautogui.click()
-    
-    def arrowKey(self, key, sleepTimer=250):
-        pyautogui.keyDown(key)
-        time.sleep(sleepTimer/1000)
-        pyautogui.keyUp(key)
-
-    def zoom(self, dir, tick=500):
-        if dir=="up" or dir=="in":
-            pyautogui.scroll(tick)
-            print(tick)
-        elif dir=="down" or dir=="out":
-            pyautogui.scroll(-tick)
-
     
 
     def calibration(self):

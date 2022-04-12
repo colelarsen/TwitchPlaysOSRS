@@ -41,6 +41,7 @@ class winSize:
         y = coords[1]
         if self.check_x(x) and self.check_y(y):
             pyautogui.moveTo(x, y)
+
     def moveMouseRelative(self, coords):
         x = coords[0]
         y = coords[1]
@@ -99,23 +100,23 @@ class TtvController:
 
                 #Check if the input line should left click on inv
                 if self.validation.validInvLClick(line): 
-                    self.osrs.clickInv(line[0], num)
+                    self.osrs.inv.clickPos(line[0], num)
                 
                 #[a-t][1-13] - left click on grid
                 elif self.validation.validMainLClick(line):
-                    self.osrs.clickMain(line[0], num)
+                    self.osrs.main.clickPos(line[0], num)
 
                 elif self.validation.validDrop(line):
                     coords = line.split(' ')[1].strip()
-                    self.osrs.dropItem(coords[0], num)
+                    self.osrs.inv.dropItem(coords[0], num)
                 
                 #right click inventory spot
                 elif self.validation.validInvRClick(line): 
-                    self.osrs.clickInv(line[1], num, True)
+                    self.osrs.inv.clickPos(line[1], num, True)
                 
                 #right click main
                 elif self.validation.validMainRClick(line): 
-                    self.osrs.clickMain(line[1], num, True)
+                    self.osrs.main.clickPos(line[1], num, True)
                 
                 #right click main
                 elif self.validation.validDrag(line): 
@@ -124,7 +125,7 @@ class TtvController:
                     secondBar = lineWords[2]
                     num1 = utility.getFirstNumber(firstBar)
                     num2 = utility.getFirstNumber(secondBar)
-                    self.osrs.dragItem(firstBar[0], num1, secondBar[0], num2)
+                    self.osrs.inv.dragItem(firstBar[0], num1, secondBar[0], num2)
 
                 elif self.validation.validMapMove(line): 
                     dir = line.split(' ')
@@ -160,7 +161,13 @@ class TtvController:
                     pyautogui.keyUp("Escape")
                 
                 elif self.validation.validQuickUse(line):
-                    self.osrs.clickInv('w', 1)
+                    self.osrs.inv.clickPos('w', 1)
+                    print(line)
+                    line = re.search("^(qu)( [w-z][1-7])?", line)
+                    if line.group() != 'qu':
+                        col = line.group().split(' ')[1]
+                        print(col)
+                        self.osrs.inv.clickPos(col[0],num)
                 
                 
                 elif self.validation.validClick(line): 
@@ -204,6 +211,12 @@ class TtvController:
                     elif action in ['equip','equipment']:
                         self.osrs.bank.depositEquip()
 
+                elif self.validation.validBankQuantity(line):
+                    lineWords = line.split(' ')
+                    quantity = lineWords[1]
+                    self.osrs.bank.changeQuantity(quantity.split('q')[1])
+                
+
                     
                 
                 #direction dur(optional)
@@ -240,9 +253,9 @@ class TtvController:
                     
                     if len(lineWords) > 1 and num in range(1,8):
                         print('first')
-                        self.osrs.move_dir(dir,num)
+                        self.osrs.main.move_dir(dir,num)
                     else:
-                        self.osrs.move_dir(dir)
+                        self.osrs.main.move_dir(dir)
 
                 
                 #move mouse x y
@@ -263,12 +276,22 @@ class TtvController:
                     if(num <= 9):
                         self.osrs.menuClick(num)
 
-                elif self.validation.validZoom(line):
-                    self.win.moveMouse((260, 210))
-                    self.osrs.zoom(line.split(' ')[1])
+                elif self.validation.validZoom(line) or self.validation.validScroll(line): # Identical save to mouse movement, merge rest     
+                    lineWords = line.split(' ')
+                    dir = lineWords[1]
+                    if num != None:
+                        self.osrs.zoom(dir, num * 500)
 
-                elif self.validation.validScroll(line):
-                    self.osrs.zoom(line.split(' ')[1])
+                    else:
+                        self.osrs.zoom(dir)
+
+                # elif self.validation.validScroll(line):
+                #     lineWords = line.split(' ')
+                #     dir = lineWords[1]
+                #     if num != None:
+                #         self.osrs.zoom(dir, num * 500)
+                #     else:
+                #         self.osrs.zoom(dir)
 
                 elif self.validation.validSpace(line): 
                     lineWords = line.split(' ')
