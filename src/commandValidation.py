@@ -51,6 +51,7 @@ class ValidationController:
     
     def validZoom(self, line): # Identical, merge
         if re.match("^(zoom) (in|out)( [1-5]?( +.*)?)?",line):
+            self.win.moveMouse((260, 210))
             return line
         return False
     
