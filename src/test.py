@@ -17,9 +17,12 @@ def testSingle():
         #time.sleep(1)
         #ttvCont.parseChat("rj7")
         time.sleep(1)
-        ttvCont.parseChat("drop w1")
+        ttvCont.parseChat("zoom in 400")
         time.sleep(1)
-        ttvCont.parseChat("drag w2 w3")
+        ttvCont.parseChat("scroll out 3m")
+        time.sleep(3)
+        ttvCont.parseChat("scroll in")
+        
     except Exception as e: 
         print(e)
 
