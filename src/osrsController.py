@@ -1,3 +1,4 @@
+from pickletools import pyunicode
 import socket, time
 from tkinter.tix import MAX
 from imagesearch import *
@@ -13,6 +14,7 @@ class osrsController:
         self.inv = self.invGrid()
         self.main = self.mainGrid()
         self.buttons = self.uiButtons()
+        self.bank = self.bankButtons()
         self.win = win
 
 
@@ -45,6 +47,8 @@ class osrsController:
             self.run = (570, 150)
             self.compass = (565, 48)
             self.special = (600, 175)
+            self.logout = (650, 460)
+            
 
         def clickCompass(self): 
             pyautogui.click(self.compass)
@@ -57,6 +61,25 @@ class osrsController:
 
         def clickSpecial(self): 
             pyautogui.click(self.special)
+
+        def clickLogout(self):
+            pyautogui.click(self.logout)
+
+    class bankButtons:
+        def __init__(self):
+            self.bankInv = (445, 340)
+            self.bankEquip = (485, 340)
+
+
+        def depositInv(self):
+            pyautogui.click(self.bankInv)
+
+        def depositEquip(self):
+            pyautogui.click(self.bankEquip)
+
+        
+
+
 
 
     # click some number of menu items below current pos
@@ -94,8 +117,14 @@ class osrsController:
             time.sleep(0.25)
             pyautogui.click()
     
-    def typeText(self, line):
-        pyautogui.write(line.split("say: ")[1][0:40], interval=0.1)
+    def typeText(self, line, enter = False):
+        text = " ".join(line.split(" ")[1:][0:100])
+        print(text)
+        pyautogui.write(text, interval=0.1)
+        if enter:
+            self.pressEnter()
+
+    def pressEnter(self):
         pyautogui.keyDown("Enter")
         time.sleep(0.1) 
         pyautogui.keyUp("Enter")
@@ -118,7 +147,10 @@ class osrsController:
             self.win.moveMouse([x,y])
             pyautogui.click()
         
-
+    def keyPress(self, key, sleepTimer=100):
+        pyautogui.keyDown(key)
+        time.sleep(sleepTimer/1000)
+        pyautogui.keyUp(key)
 
     def dropItem(self, letter, number):
         self.win.moveMouse(self.inv_pos(letter,number))
@@ -130,9 +162,12 @@ class osrsController:
     
     def dragItem(self, l1, n1, l2, n2):
         self.win.moveMouse(self.inv_pos(l1,n1))
-        time.sleep(0.1)
-        tupleCoords = self.inv_pos(l2,n2)
-        pyautogui.dragTo(tupleCoords[0], tupleCoords[1], duration=0.1)
+        pyautogui.mouseDown()
+        time.sleep(0.05)
+        self.win.moveMouse(self.inv_pos(l2,n2))
+        time.sleep(0.05)
+        pyautogui.mouseUp()
+        
 
     def checkMainCoord(self, letter, num):
         return letter in self.main.cols and num in self.main.rows
@@ -141,7 +176,8 @@ class osrsController:
         return letter in self.inv.cols and num in self.inv.rows
 
     def logout(self):
-        pass
+        self.buttons.clickLogout()
+
 
     def login(self):
         isOnMainScreen = imagesearch("Images/loginscreen.PNG", 0.8)
@@ -176,10 +212,7 @@ class osrsController:
         elif dir=="down" or dir=="out":
             pyautogui.scroll(-tick)
 
-    def keyPress(self, key, sleepTimer=100):
-        pyautogui.keyDown(key)
-        time.sleep(sleepTimer/1000)
-        pyautogui.keyUp(key)
+    
 
     def calibration(self):
         for i in range(len(self.main.cols)):

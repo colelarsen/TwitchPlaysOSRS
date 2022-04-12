@@ -60,6 +60,11 @@ class ValidationController:
             num = utility.getFirstNumber(coords)
             return self.osrs.checkInvCoord(coords[0], num)
         return False
+
+    def validBankDeposit(self,line):
+        if re.match("^((bank ))((inv|inventory|equipment|equip)( +.*)?)?$",line):
+            return True
+        return False
     
     def validMapMove(self, line):
         if re.match("^((map)|(mm)|(m) ((tr)|(ur)|(br)|(bl)|(ul)|(tl)|(bottom)|(top)|(bot)|(down)|(left)|(right)|(t)|(b)|(d)|(l)|(r)))( +.*)?$", line): 
@@ -97,6 +102,11 @@ class ValidationController:
         if(re.match("^say: ((?!::).)*$", line)):
             return True
         return False
+
+    def validType(self,line):
+        if(re.match("^type: ((?!::).)*$", line)):
+            return True
+        return False
     
     def validCam(self, line):
         if line.startswith("cam ") or line.startswith("c "):
@@ -104,8 +114,16 @@ class ValidationController:
             dir = lineWords[1]
             if len(lineWords) == 3 and dir in ["left", "right", "down", "up"]:
                 num = utility.getFirstNumber(line)
-                return num <= 3000
+                return num <= 5000
             if dir in ["left", "right", "down", "up"]:
+                return True
+        return False
+
+    def validAngleCam(self,line):
+        if line.startswith("cam ") or line.startswith("c "):
+            lineWords = line.split(' ')
+            dir = lineWords[1]
+            if dir in ['qtr','qtl']:
                 return True
         return False
     
@@ -157,6 +175,9 @@ class ValidationController:
     
     def validLogin(self, line):
         return line == "login"
+
+    def validLogout(self,line):
+        return line == "logout 5724"
     
     def validGear(self, line):
         return   line == "gear" or line == "equip" or line == "equipment"

@@ -189,8 +189,21 @@ class TtvController:
                     self.osrs.buttons.clickPrayer()
                 
                 elif self.validation.validSay(line):
+                    x = threading.Thread(target=self.osrs.typeText, args=(line,True))
+                    x.start()
+
+                elif self.validation.validType(line):
                     x = threading.Thread(target=self.osrs.typeText, args=(line,))
                     x.start()
+
+                elif self.validation.validBankDeposit(line):
+                    lineWords = line.split(' ')
+                    action = lineWords[1]
+                    if action in ['inv','inventory']:
+                        self.osrs.bank.depositInv() 
+                    elif action in ['equip','equipment']:
+                        self.osrs.bank.depositEquip()
+
                     
                 
                 #direction dur(optional)
@@ -198,9 +211,27 @@ class TtvController:
                     lineWords = line.split(' ')
                     dir = lineWords[1]
                     if len(lineWords) == 3:
-                        self.osrs.arrowKey(dir,num)
+                        x = threading.Thread(target=self.osrs.arrowKey, args=(dir,num,))
+                        x.start()
                     else:
-                        self.osrs.arrowKey(dir)
+                        x = threading.Thread(target=self.osrs.arrowKey, args=(dir,))
+                        x.start()
+
+                #Quarter turn = 815
+
+                #full turn = 3620
+
+                elif self.validation.validAngleCam(line):
+                    qt = 815
+                    lineWords = line.split(' ')
+                    dir = lineWords[1]
+                    if dir == 'qtr':
+                        x = threading.Thread(target=self.osrs.arrowKey, args=('right',qt,))
+                        x.start()
+                    elif dir == 'qtl':
+                        x = threading.Thread(target=self.osrs.arrowKey, args=('left',qt,))
+                        x.start()
+
 
 
                 elif self.validation.validDir(line):
@@ -257,9 +288,6 @@ class TtvController:
                 elif self.validation.validStats(line): 
                     self.osrs.keyPress("F2")
                 
-                elif self.validation.validGroup(line): 
-                    self.osrs.keyPress("F10")
-                
                 elif self.validation.validQuests(line): 
                     self.osrs.keyPress("F3")
                 
@@ -274,7 +302,14 @@ class TtvController:
                 
                 elif self.validation.validSpells(line): 
                     self.osrs.keyPress("F7")
-                
+
+                elif self.validation.validLogout(line):
+                    self.osrs.keyPress("F9")
+                    self.osrs.logout()
+
+                elif self.validation.validGroup(line): 
+                    self.osrs.keyPress("F10")
+
                 elif self.validation.validEmotes(line): 
                     self.osrs.keyPress("F11")
                 

@@ -1,3 +1,4 @@
+from ttvController import TtvController
 import ttvController as ttv
 import socket, time
 import pyautogui
@@ -8,12 +9,7 @@ ttvCont = ttv.TtvController()
 def testSingle(): 
     ttvCont = ttv.TtvController()
     try:
-        ttvCont.parseChat("up 6")
-    except Exception as e: 
-        print(e)
-    time.sleep(2)
-    try:
-        ttvCont.parseChat("down 6")
+        ttvCont.parseChat("bank equip")
     except Exception as e: 
         print(e)
 
