@@ -97,6 +97,11 @@ class ValidationController:
         if(re.match("^say: ((?!::).)*$", line)):
             return True
         return False
+
+    def validType(self,line):
+        if(re.match("^type: ((?!::).)*$", line)):
+            return True
+        return False
     
     def validCam(self, line):
         if line.startswith("cam ") or line.startswith("c "):
@@ -104,9 +109,18 @@ class ValidationController:
             dir = lineWords[1]
             if len(lineWords) == 3 and dir in ["left", "right", "down", "up"]:
                 num = utility.getFirstNumber(line)
-                return num <= 3000
+                return num <= 5000
             if dir in ["left", "right", "down", "up"]:
                 return True
+        return False
+
+    def validAngleCam(self,line):
+        if line.startswith("cam ") or line.startswith("c "):
+            lineWords = line.split(' ')
+            dir = lineWords[1]
+            if dir in ['qtr','qtl']:
+                return True
+
         return False
     
     def validMouseMoveTo(self, line):

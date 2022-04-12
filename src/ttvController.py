@@ -189,6 +189,10 @@ class TtvController:
                     self.osrs.buttons.clickPrayer()
                 
                 elif self.validation.validSay(line):
+                    x = threading.Thread(target=self.osrs.typeText, args=(line,True))
+                    x.start()
+
+                elif self.validation.validType(line):
                     x = threading.Thread(target=self.osrs.typeText, args=(line,))
                     x.start()
                     
@@ -198,9 +202,27 @@ class TtvController:
                     lineWords = line.split(' ')
                     dir = lineWords[1]
                     if len(lineWords) == 3:
-                        self.osrs.arrowKey(dir,num)
+                        x = threading.Thread(target=self.osrs.arrowKey, args=(dir,num,))
+                        x.start()
                     else:
-                        self.osrs.arrowKey(dir)
+                        x = threading.Thread(target=self.osrs.arrowKey, args=(dir,))
+                        x.start()
+
+                #Quarter turn = 815
+
+                #full turn = 3620
+
+                elif self.validation.validAngleCam(line):
+                    qt = 815
+                    lineWords = line.split(' ')
+                    dir = lineWords[1]
+                    if dir == 'qtr':
+                        x = threading.Thread(target=self.osrs.arrowKey, args=('right',qt,))
+                        x.start()
+                    elif dir == 'qtl':
+                        x = threading.Thread(target=self.osrs.arrowKey, args=('left',qt,))
+                        x.start()
+
 
 
                 elif self.validation.validDir(line):
