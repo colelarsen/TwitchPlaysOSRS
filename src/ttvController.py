@@ -270,12 +270,34 @@ class TtvController:
                     if(num <= 9):
                         self.osrs.menuClick(num)
 
-                elif self.validation.validZoom(line):
+                elif self.validation.validZoom(line): # Identical save to mouse movement, merge rest
                     self.win.moveMouse((260, 210))
-                    self.osrs.zoom(line.split(' ')[1])
+                    lineWords = line.split(' ')
+                    dir = lineWords[1]
+                    if len(lineWords) > 2:
+                        hold = lineWords[2]
+                        num = hold[0]
+                        if num.isdigit() and int(num) in range(1,5):
+                            self.osrs.zoom(dir, int(num) * 500)
+                        else:
+                            self.osrs.zoom(dir)
+
+                    else:
+                        self.osrs.zoom(dir)
 
                 elif self.validation.validScroll(line):
-                    self.osrs.zoom(line.split(' ')[1])
+                    lineWords = line.split(' ')
+                    dir = lineWords[1]
+                    if len(lineWords) > 2:
+                        hold = lineWords[2]
+                        num = hold[0]
+                        if num.isdigit() and int(num) in range(1,5):
+                            self.osrs.zoom(dir, int(num) * 500)
+                        else:
+                            self.osrs.zoom(dir)
+
+                    else:
+                        self.osrs.zoom(dir)
 
                 elif self.validation.validSpace(line): 
                     lineWords = line.split(' ')
