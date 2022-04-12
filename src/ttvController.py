@@ -41,6 +41,7 @@ class winSize:
         y = coords[1]
         if self.check_x(x) and self.check_y(y):
             pyautogui.moveTo(x, y)
+
     def moveMouseRelative(self, coords):
         x = coords[0]
         y = coords[1]
@@ -99,23 +100,23 @@ class TtvController:
 
                 #Check if the input line should left click on inv
                 if self.validation.validInvLClick(line): 
-                    self.osrs.clickInv(line[0], num)
+                    self.osrs.inv.clickPos(line[0], num)
                 
                 #[a-t][1-13] - left click on grid
                 elif self.validation.validMainLClick(line):
-                    self.osrs.clickMain(line[0], num)
+                    self.osrs.main.clickPos(line[0], num)
 
                 elif self.validation.validDrop(line):
                     coords = line.split(' ')[1].strip()
-                    self.osrs.dropItem(coords[0], num)
+                    self.osrs.inv.dropItem(coords[0], num)
                 
                 #right click inventory spot
                 elif self.validation.validInvRClick(line): 
-                    self.osrs.clickInv(line[1], num, True)
+                    self.osrs.inv.clickPos(line[1], num, True)
                 
                 #right click main
                 elif self.validation.validMainRClick(line): 
-                    self.osrs.clickMain(line[1], num, True)
+                    self.osrs.main.clickPos(line[1], num, True)
                 
                 #right click main
                 elif self.validation.validDrag(line): 
@@ -124,7 +125,7 @@ class TtvController:
                     secondBar = lineWords[2]
                     num1 = utility.getFirstNumber(firstBar)
                     num2 = utility.getFirstNumber(secondBar)
-                    self.osrs.dragItem(firstBar[0], num1, secondBar[0], num2)
+                    self.osrs.inv.dragItem(firstBar[0], num1, secondBar[0], num2)
 
                 elif self.validation.validMapMove(line): 
                     dir = line.split(' ')
@@ -246,9 +247,9 @@ class TtvController:
                     
                     if len(lineWords) > 1 and num in range(1,8):
                         print('first')
-                        self.osrs.move_dir(dir,num)
+                        self.osrs.main.move_dir(dir,num)
                     else:
-                        self.osrs.move_dir(dir)
+                        self.osrs.main.move_dir(dir)
 
                 
                 #move mouse x y
