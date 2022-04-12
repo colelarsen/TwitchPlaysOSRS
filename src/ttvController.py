@@ -201,6 +201,18 @@ class TtvController:
                         self.osrs.arrowKey(dir,num)
                     else:
                         self.osrs.arrowKey(dir)
+
+
+                elif self.validation.validDir(line):
+                    lineWords = line.split(' ')
+                    dir = lineWords[0]
+                    
+                    if len(lineWords) > 1 and num in range(1,8):
+                        print('first')
+                        self.osrs.move_dir(dir,num)
+                    else:
+                        self.osrs.move_dir(dir)
+
                 
                 #move mouse x y
                 elif self.validation.validMouseMoveTo(line):

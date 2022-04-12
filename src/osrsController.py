@@ -24,10 +24,10 @@ class osrsController:
             self.StartY = 40
             self.SqWidth = 25.5
             self.SqHeight = 25.5
-            self.endX = self.StartX + self.SqWidth * len(self.cols)
-            self.endY = self.StartY + self.SqHeight * len(self.rows)
-            self.centerX = self.endX - self.StartX / 2
-            self.centerY = self.endY - self.StartY / 2
+            self.endX = self.StartX + (self.SqWidth * len(self.cols))
+            self.endY = self.StartY + (self.SqHeight * len(self.rows))
+            self.centerX = self.StartX + ((self.endX - self.StartX) / 2)
+            self.centerY = self.StartY + ((self.endY - self.StartY) / 2)
 
 
     class invGrid:
@@ -105,15 +105,15 @@ class osrsController:
         x = self.main.centerX
         y = self.main.centerY
 
-        if dir in ['left','right','up','down'] and num < 7:
+        if dir in ['left','right','up','down'] and num < 7 and num > 0:
             if dir == 'left':
-                x = self.main.centerX - (self.main.SqWidth * num)
+                x = self.main.centerX - (self.main.SqWidth * num) - 10
             elif dir == 'right':
                 x = self.main.centerX + (self.main.SqWidth * num)
             elif dir == 'up':
                 y = self.main.centerY - (self.main.SqHeight * num)
             elif dir == 'down':
-                y = self.main.centerX + (self.main.SqHeight * num)
+                y = self.main.centerY + (self.main.SqHeight * (num)) + 15
 
             self.win.moveMouse([x,y])
             pyautogui.click()
