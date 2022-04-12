@@ -1,3 +1,4 @@
+from pickletools import pyunicode
 import socket, time
 from tkinter.tix import MAX
 from imagesearch import *
@@ -130,9 +131,12 @@ class osrsController:
     
     def dragItem(self, l1, n1, l2, n2):
         self.win.moveMouse(self.inv_pos(l1,n1))
-        time.sleep(0.1)
-        tupleCoords = self.inv_pos(l2,n2)
-        pyautogui.dragTo(tupleCoords[0], tupleCoords[1], duration=0.1)
+        pyautogui.mouseDown()
+        time.sleep(0.05)
+        self.win.moveMouse(self.inv_pos(l2,n2))
+        time.sleep(0.05)
+        pyautogui.mouseUp()
+        
 
     def checkMainCoord(self, letter, num):
         return letter in self.main.cols and num in self.main.rows
