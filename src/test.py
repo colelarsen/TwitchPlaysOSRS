@@ -9,7 +9,7 @@ ttvCont = ttv.TtvController()
 def testSingle(): 
     ttvCont = ttv.TtvController()
     try:
-        ttvCont.parseChat("type: hello chat")
+        ttvCont.parseChat("logout 5724")
     except Exception as e: 
         print(e)
 

@@ -46,6 +46,7 @@ class osrsController:
             self.run = (570, 150)
             self.compass = (565, 48)
             self.special = (600, 175)
+            self.logout = (650, 460)
 
         def clickCompass(self): 
             pyautogui.click(self.compass)
@@ -58,6 +59,10 @@ class osrsController:
 
         def clickSpecial(self): 
             pyautogui.click(self.special)
+
+        def clickLogout(self):
+            pyautogui.click(self.logout)
+
 
 
     # click some number of menu items below current pos
@@ -151,7 +156,8 @@ class osrsController:
         return letter in self.inv.cols and num in self.inv.rows
 
     def logout(self):
-        pass
+        self.buttons.clickLogout()
+
 
     def login(self):
         isOnMainScreen = imagesearch("Images/loginscreen.PNG", 0.8)

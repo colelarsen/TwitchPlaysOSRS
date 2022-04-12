@@ -171,6 +171,9 @@ class ValidationController:
     
     def validLogin(self, line):
         return line == "login"
+
+    def validLogout(self,line):
+        return line == "logout 5724"
     
     def validGear(self, line):
         return   line == "gear" or line == "equip" or line == "equipment"

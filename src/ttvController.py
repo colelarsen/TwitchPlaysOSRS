@@ -279,9 +279,6 @@ class TtvController:
                 elif self.validation.validStats(line): 
                     self.osrs.keyPress("F2")
                 
-                elif self.validation.validGroup(line): 
-                    self.osrs.keyPress("F10")
-                
                 elif self.validation.validQuests(line): 
                     self.osrs.keyPress("F3")
                 
@@ -296,7 +293,14 @@ class TtvController:
                 
                 elif self.validation.validSpells(line): 
                     self.osrs.keyPress("F7")
-                
+
+                elif self.validation.validLogout(line):
+                    self.osrs.keyPress("F9")
+                    self.osrs.logout()
+
+                elif self.validation.validGroup(line): 
+                    self.osrs.keyPress("F10")
+
                 elif self.validation.validEmotes(line): 
                     self.osrs.keyPress("F11")
                 
