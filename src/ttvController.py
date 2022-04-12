@@ -161,7 +161,13 @@ class TtvController:
                     pyautogui.keyUp("Escape")
                 
                 elif self.validation.validQuickUse(line):
-                    self.osrs.clickInv('w', 1)
+                    self.osrs.inv.clickPos('w', 1)
+                    print(line)
+                    line = re.search("^(qu)( [w-z][1-7])?", line)
+                    if line.group() != 'qu':
+                        col = line.group().split(' ')[1]
+                        print(col)
+                        self.osrs.inv.clickPos(col[0],num)
                 
                 
                 elif self.validation.validClick(line): 

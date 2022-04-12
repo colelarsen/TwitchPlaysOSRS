@@ -186,7 +186,9 @@ class ValidationController:
         return False
 
     def validQuickUse(self, line):
-        return "qu"==line or line.startswith("qu ")
+        if re.findall("^(qu)( [w-z][1-7])?", line):
+            return line
+        return False
 
     ########################################################################
 
