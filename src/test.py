@@ -4,13 +4,18 @@ import socket, time
 import pyautogui
 
 
-ttvCont = ttv.TtvController()
-
 def testSingle(): 
     ttvCont = ttv.TtvController()
     try:
-        ttvCont.parseChat("bank open 4183")
-        time.sleep(.5)
+        time.sleep(4)
+        ttvCont.parseChat("login")
+        time.sleep(5)
+        ttvCont.parseChat("logout 5724")
+        time.sleep(5)
+        ttvCont.parseChat("login")
+        time.sleep(5)
+
+
         
 
     except Exception as e: 
@@ -20,5 +25,5 @@ def testSingle():
 time.sleep(4)
 testSingle()
 
-#while True:
+# while True:
 #    print(pyautogui.position())
