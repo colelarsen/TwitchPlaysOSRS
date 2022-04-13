@@ -85,8 +85,8 @@ def main(commandList):
         time.sleep(0.2)
 
 #Start TTV thread
-# mainTTVThread = threading.Thread(target=mainTTV, args=(commands,))
-# mainTTVThread.start()
+mainTTVThread = threading.Thread(target=mainTTV, args=(commands,))
+mainTTVThread.start()
 
 #Start Youtube thread
 # mainYTThread = threading.Thread(target=mainYT, args=())
