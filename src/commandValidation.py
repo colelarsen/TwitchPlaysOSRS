@@ -130,6 +130,10 @@ class ValidationController:
     def validStop(self, line):
         return line=="stop"
     
+    def validBankOpen(self,line):
+        if re.match("^(bank open)( [\d]{4}( +.*)?)?$",line):
+            return True
+        return False
 
     def validBankDeposit(self,line):
         if re.match("^((bank ))((inv|inventory|equipment|equip)( +.*)?)?$",line):
@@ -186,7 +190,7 @@ class ValidationController:
         return False
 
     def validQuickUse(self, line):
-        if re.findall("^(qu)( [w-z][1-7])?", line):
+        if re.match("^(qu)( [w-z][1-7])?", line):
             return line
         return False
 
@@ -229,7 +233,7 @@ class ValidationController:
         return  line == "chat channel" or line == "minigame" or line == "clan" or line == "group"
     
     def validQuests(self, line):
-        return  line == "quests"
+        return  line in ["quests", 'quest']
     
     def validInv(self, line):
         return line == "i" or line == "inv" or line == "inventory"
