@@ -18,8 +18,19 @@ class winSize:
         self.xMin = 0 
         self.yMin = 25
 
+        self.screenshot = self.screenshotArea()
+
         self.xCenter = (self.xMax - self.xMin) / 2
         self.yCenter = (self.yMax - self.yMin) / 2
+
+    class screenshotArea:
+        xMin = 0
+        yMin = 0
+        xMax = 770
+        yMax = 530
+
+        def region(self):
+            return self.xMin, self.yMin, self.xMax, self.yMax
 
     # Ensure target is within window
     def check_x(self,x):
@@ -54,19 +65,21 @@ class TtvController:
         self.win = winSize()
         self.osrs = osrs.osrsController(self.win)
         self.validation = validation.ValidationController(self.osrs, self.win)
-        self.isOnLoginScreen = self.checkLoginScreen()
-        self.isOnBankSettingsScreen = self.checkBankSettings()
-        self.isOnBankPinScreen = self.checkBankPin()
+        self.isOnLoginScreen = False
+        self.checkLoginScreen()
+        self.isOnBankSettingsScreen = False
+        self.checkBankSettings()
+        self.isOnBankPinScreen = False
 
 
     def checkLoginScreen(self):
-        self.isOnLoginScreen = imagesearcharea("Images/loginscreen.PNG", self.win.xMin, self.win.yMin, self.win.xMax, self.win.yMax, 0.8)[0] != -1
+        self.isOnLoginScreen = imagesearcharea("Images/loginscreen.PNG", *self.win.screenshot.region(), 0.8)[0] != -1
 
     def checkBankSettings(self):
-        self.isOnBankSettingsScreen = imagesearcharea("Images/bankPinSettings.PNG", self.win.xMin, self.win.yMin, self.win.xMax, self.win.yMax, 0.8)[0] != -1
+        self.isOnBankSettingsScreen = imagesearcharea("Images/bankPinSettings.PNG", *self.win.screenshot.region(), 0.8)[0] != -1
 
     def checkBankPin(self):
-        self.isOnBankPinScreen = imagesearcharea("Images/bankPinEntry.PNG", self.win.xMin, self.win.yMin, self.win.xMax, self.win.yMax, 0.8)[0] != -1
+        self.isOnBankPinScreen = imagesearcharea("Images/bankPinEntry.PNG", *self.win.screenshot.region(), 0.8)[0] != -1
 
 
     def readChat(self, lines):
@@ -95,6 +108,7 @@ class TtvController:
                 pyautogui.keyUp("Escape")
             elif self.isOnLoginScreen and line == "login":
                 self.osrs.login()
+                self.checkLoginScreen()
             
 
             elif not self.isOnLoginScreen and not self.isOnBankPinScreen:
@@ -231,8 +245,6 @@ class TtvController:
                         lineWords = line.split(' ')
                         pin = lineWords[2]
                         self.osrs.openBank(pin)
-                    else:
-                        print('bank pin not open')
                 
 
                     
@@ -346,6 +358,8 @@ class TtvController:
                 elif self.validation.validLogout(line):
                     self.osrs.keyPress("F9")
                     self.osrs.logout()
+                    time.sleep(2)
+                    self.checkLoginScreen()
 
                 elif self.validation.validGroup(line): 
                     self.osrs.keyPress("F10")
