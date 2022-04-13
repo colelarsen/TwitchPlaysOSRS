@@ -17,7 +17,7 @@ youtubeVideoId = 'Q41OiZqu87c'
 ttvCont = ttv.TtvController()
 
 #Function that reads chat from twitch
-def mainTTV(commandList): 
+def mainTTV(commandList, messageQueue): 
     sock = socket.socket()
 
     sock.connect((server, port))
