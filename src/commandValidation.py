@@ -30,13 +30,13 @@ class ValidationController:
 
 
     def validMouseMoveTo(self, line): ## I think we should change this to be "mouse x y"
-        if line.startswith("move mouse to"):
+        if line.startswith("mouse to"):
             dur = line.split(' ')
             return len(dur) == 5 and (int(dur[3]) <= self.win.xMax and int(dur[4])*-1 <= self.win.yMax)
         return False
     
     def validMouseMove(self, line): ## and change this to be "mouserel x y" or smth, not as sold on this. we could also do like "mouse [dir] [num]"
-        if line.startswith("move mouse "):
+        if line.startswith("mouse "):
             dur = line.split(' ')
             return len(dur) == 4 and (int(dur[2]) <= self.win.xMax and int(dur[3])*-1 <= self.win.yMax)
         return False
@@ -56,7 +56,7 @@ class ValidationController:
         return False
     
     def validScroll(self, line):
-        if re.match("^(scroll) (in|out)( [1-5]?( +.*)?)?",line):
+        if re.match("^(scroll) (in|out|down|up)( [1-5]?( +.*)?)?",line):
             return line
         return False
         #return line=="scroll up"or line=="scroll down"
@@ -100,7 +100,7 @@ class ValidationController:
         return False
 
     def validSpace(self, line):
-        if re.match("^((spacebar)|(space))( [0-9]+)?( +.*)?$", line):
+        if re.match("^((spacebar)|(space)|(sp))( [0-9]+)?( +.*)?$", line):
             return True
         return False
 
@@ -130,6 +130,10 @@ class ValidationController:
     def validStop(self, line):
         return line=="stop"
     
+    def validBankOpen(self,line):
+        if re.match("^(bank open)( [\d]{4}( +.*)?)?$",line):
+            return True
+        return False
 
     def validBankDeposit(self,line):
         if re.match("^((bank ))((inv|inventory|equipment|equip)( +.*)?)?$",line):
@@ -186,7 +190,7 @@ class ValidationController:
         return False
 
     def validQuickUse(self, line):
-        if re.findall("^(qu)( [w-z][1-7])?", line):
+        if re.match("^(qu)( [w-z][1-7])?", line):
             return line
         return False
 
@@ -197,7 +201,7 @@ class ValidationController:
     ######################### HUD VALIDATIONS #########################
 
     def validMapMove(self, line):
-        if re.match("^((map)|(mm)|(m) ((tr)|(ur)|(br)|(bl)|(ul)|(tl)|(bottom)|(top)|(bot)|(down)|(left)|(right)|(t)|(b)|(d)|(l)|(r)))( +.*)?$", line): 
+        if re.match("^((map)|(mm)|(m) ((tr)|(ur)|(br)|(bl)|(ul)|(tl)|(bottom)|(top)|(up)|(bot)|(down)|(left)|(right)|(t)|(b)|(d)|(u)|(l)|(r)))( +.*)?$", line): 
             return True
         return False
     
@@ -229,7 +233,7 @@ class ValidationController:
         return  line == "chat channel" or line == "minigame" or line == "clan" or line == "group"
     
     def validQuests(self, line):
-        return  line == "quests"
+        return  line in ["quests", 'quest']
     
     def validInv(self, line):
         return line == "i" or line == "inv" or line == "inventory"

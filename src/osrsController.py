@@ -151,6 +151,7 @@ class osrsController:
             self.bankInv = (445, 340)
             self.bankEquip = (485, 340)
             self.quantities = self.bankQuantities()
+            self.pin = 6934
 
         class bankQuantities:
             def __init__(self):
@@ -180,7 +181,13 @@ class osrsController:
             elif which == 'all':
                 pyautogui.click(self.quantities.qAll)
 
+        def openBank(self, keyPress, pin):
+            for char in pin:
+                keyPress(char)
 
+
+    def openBank(self, pin):
+        self.bank.openBank(self.keyPress,pin)
 
 
     # click some number of menu items below current pos
@@ -229,25 +236,23 @@ class osrsController:
 
 
     def login(self):
-        isOnMainScreen = imagesearch("Images/loginscreen.PNG", 0.8)
-        if isOnMainScreen[0] != -1:
-            isOnDC = imagesearch("Images/disconnectscreen.PNG", 0.8)
-            if isOnDC[0] != -1:
-                self.win.moveMouse((430, 320))
-                pyautogui.click()
-            pyautogui.keyDown("enter")
-            time.sleep(0.1)
-            pyautogui.keyUp("enter")
-            time.sleep(0.1)
-            pyautogui.write(password, interval=0.1)
-            pyautogui.keyDown("Enter")
-            time.sleep(0.25) 
-            pyautogui.keyUp("Enter")
-
-            time.sleep(10)
+        isOnDC = imagesearcharea("Images/disconnectscreen.PNG", *self.win.screenshot.region(), 0.8)
+        if isOnDC[0] != -1:
             self.win.moveMouse((430, 320))
-            time.sleep(0.25)
             pyautogui.click()
+        pyautogui.keyDown("enter")
+        time.sleep(0.1)
+        pyautogui.keyUp("enter")
+        time.sleep(0.1)
+        pyautogui.write(password, interval=0.1)
+        pyautogui.keyDown("Enter")
+        time.sleep(0.25) 
+        pyautogui.keyUp("Enter")
+
+        time.sleep(10)
+        self.win.moveMouse((430, 320))
+        time.sleep(0.25)
+        pyautogui.click()
     
 
     def calibration(self):

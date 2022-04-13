@@ -18,8 +18,19 @@ class winSize:
         self.xMin = 0 
         self.yMin = 25
 
+        self.screenshot = self.screenshotArea()
+
         self.xCenter = (self.xMax - self.xMin) / 2
         self.yCenter = (self.yMax - self.yMin) / 2
+
+    class screenshotArea:
+        xMin = 0
+        yMin = 0
+        xMax = 770
+        yMax = 530
+
+        def region(self):
+            return self.xMin, self.yMin, self.xMax, self.yMax
 
     # Ensure target is within window
     def check_x(self,x):
@@ -54,6 +65,22 @@ class TtvController:
         self.win = winSize()
         self.osrs = osrs.osrsController(self.win)
         self.validation = validation.ValidationController(self.osrs, self.win)
+        self.isOnLoginScreen = False
+        self.checkLoginScreen()
+        self.isOnBankSettingsScreen = False
+        self.checkBankSettings()
+        self.isOnBankPinScreen = False
+
+
+    def checkLoginScreen(self):
+        self.isOnLoginScreen = imagesearcharea("Images/loginscreen.PNG", *self.win.screenshot.region(), 0.8)[0] != -1
+
+    def checkBankSettings(self):
+        self.isOnBankSettingsScreen = imagesearcharea("Images/bankPinSettings.PNG", *self.win.screenshot.region(), 0.8)[0] != -1
+
+    def checkBankPin(self):
+        self.isOnBankPinScreen = imagesearcharea("Images/bankPinEntry.PNG", *self.win.screenshot.region(), 0.8)[0] != -1
+
 
     def readChat(self, lines):
         try:
@@ -74,19 +101,17 @@ class TtvController:
 
         #Run all validation rules against this line... this is faster than doing image recogniztion everytime for bad input
         if self.validation.isValidInput(line):
-
-            isOnLoginScreen = imagesearch("Images/loginscreen.PNG", 0.8)[0] != -1
-            isOnBankPinScreen = imagesearch("Images/bankPin.PNG", 0.8)[0] != -1
             
-            if isOnBankPinScreen:
+            if self.isOnBankPinScreen:
                 pyautogui.keyDown("Escape")
                 time.sleep(0.25) 
                 pyautogui.keyUp("Escape")
-            elif isOnLoginScreen and line == "login":
+            elif self.isOnLoginScreen and line == "login":
                 self.osrs.login()
+                self.checkLoginScreen()
             
 
-            elif not isOnLoginScreen and not isOnBankPinScreen:
+            elif not self.isOnLoginScreen and not self.isOnBankPinScreen:
             # elif True: #uncomment this when you want to do some debugging locally without checking for bank shit
                 num = utility.getFirstNumber(line)
 
@@ -124,7 +149,7 @@ class TtvController:
 
                 elif self.validation.validMapMove(line): 
                     dir = line.split(' ')
-                    if(dir[1] in ["top", "t"]):
+                    if(dir[1] in ["top", "t", "up", "u"]):
                         self.win.moveMouse((650, 40))
                         pyautogui.click()
                     if dir[1] in ["bottom", "b", "bot", "down", "d"]:
@@ -154,15 +179,18 @@ class TtvController:
                     pyautogui.keyDown("Escape")
                     time.sleep(0.1) 
                     pyautogui.keyUp("Escape")
+
+                elif self.validation.validQuests(line): 
+                    self.osrs.keyPress("F3")
                 
                 elif self.validation.validQuickUse(line):
                     self.osrs.inv.clickPos('w', 1)
                     print(line)
                     line = re.search("^(qu)( [w-z][1-7])?", line)
-                    if line.group() != 'qu':
-                        col = line.group().split(' ')[1]
-                        print(col)
-                        self.osrs.inv.clickPos(col[0],num)
+                    # if line.group() != 'qu':
+                    #     col = line.group().split(' ')[1]
+                    #     print(col)
+                    #     self.osrs.inv.clickPos(col[0],num)
                 
                 
                 elif self.validation.validClick(line): 
@@ -210,6 +238,13 @@ class TtvController:
                     lineWords = line.split(' ')
                     quantity = lineWords[1]
                     self.osrs.bank.changeQuantity(quantity.split('q')[1])
+
+                elif self.validation.validBankOpen(line):
+                    self.checkBankPin()
+                    if self.isOnBankPinScreen:
+                        lineWords = line.split(' ')
+                        pin = lineWords[2]
+                        self.osrs.openBank(pin)
                 
 
                     
@@ -306,8 +341,7 @@ class TtvController:
                 elif self.validation.validStats(line): 
                     self.osrs.keyPress("F2")
                 
-                elif self.validation.validQuests(line): 
-                    self.osrs.keyPress("F3")
+                
                 
                 elif self.validation.validInv(line): 
                     self.osrs.keyPress("F4")
@@ -324,6 +358,8 @@ class TtvController:
                 elif self.validation.validLogout(line):
                     self.osrs.keyPress("F9")
                     self.osrs.logout()
+                    time.sleep(2)
+                    self.checkLoginScreen()
 
                 elif self.validation.validGroup(line): 
                     self.osrs.keyPress("F10")
