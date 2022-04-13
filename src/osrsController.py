@@ -236,25 +236,23 @@ class osrsController:
 
 
     def login(self):
-        isOnMainScreen = imagesearch("Images/loginscreen.PNG", 0.8)
-        if isOnMainScreen[0] != -1:
-            isOnDC = imagesearch("Images/disconnectscreen.PNG", 0.8)
-            if isOnDC[0] != -1:
-                self.win.moveMouse((430, 320))
-                pyautogui.click()
-            pyautogui.keyDown("enter")
-            time.sleep(0.1)
-            pyautogui.keyUp("enter")
-            time.sleep(0.1)
-            pyautogui.write(password, interval=0.1)
-            pyautogui.keyDown("Enter")
-            time.sleep(0.25) 
-            pyautogui.keyUp("Enter")
-
-            time.sleep(10)
+        isOnDC = imagesearcharea("Images/disconnectscreen.PNG", *self.win.screenshot.region(), 0.8)
+        if isOnDC[0] != -1:
             self.win.moveMouse((430, 320))
-            time.sleep(0.25)
             pyautogui.click()
+        pyautogui.keyDown("enter")
+        time.sleep(0.1)
+        pyautogui.keyUp("enter")
+        time.sleep(0.1)
+        pyautogui.write(password, interval=0.1)
+        pyautogui.keyDown("Enter")
+        time.sleep(0.25) 
+        pyautogui.keyUp("Enter")
+
+        time.sleep(10)
+        self.win.moveMouse((430, 320))
+        time.sleep(0.25)
+        pyautogui.click()
     
 
     def calibration(self):
