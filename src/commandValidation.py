@@ -56,7 +56,7 @@ class ValidationController:
         return False
     
     def validScroll(self, line):
-        if re.match("^(scroll) (in|out)( [1-5]?( +.*)?)?",line):
+        if re.match("^(scroll) (in|out|down|up)( [1-5]?( +.*)?)?",line):
             return line
         return False
         #return line=="scroll up"or line=="scroll down"
