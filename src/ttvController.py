@@ -55,19 +55,14 @@ class TtvController:
         self.osrs = osrs.osrsController(self.win)
         self.validation = validation.ValidationController(self.osrs, self.win)
 
-    def readChat(self, resp):
-        resp = resp.rstrip().split('\r\n')
+    def readChat(self, lines):
         try:
-            for i in resp:
-                line = random.choice(resp)
-                if "PRIVMSG" in line:
-                    user = line.split(':')[1].split('!')[0]
-                    msg = line.split(':', maxsplit=2)[2]
-                    line = user + ": " + msg
-                    wasValid = self.parseChat(msg)
-                    if wasValid:
-                        print(line + ": was valid")
-                        break
+            for i in lines:
+                line = random.choice(lines)
+                wasValid = self.parseChat(line)
+                if wasValid:
+                    print(line + ": was valid")
+                    break
         except Exception as e: 
                 print(e)
 
