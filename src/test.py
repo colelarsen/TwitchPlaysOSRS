@@ -9,7 +9,9 @@ ttvCont = ttv.TtvController()
 def testSingle(): 
     ttvCont = ttv.TtvController()
     try:
-        ttvCont.parseChat("combat")
+        ttvCont.parseChat("bank open 4183")
+        time.sleep(.5)
+        
 
     except Exception as e: 
         print(e)
