@@ -149,7 +149,7 @@ class TtvController:
 
                 elif self.validation.validMapMove(line): 
                     dir = line.split(' ')
-                    if(dir[1] in ["top", "t"]):
+                    if(dir[1] in ["top", "t", "up", "u"]):
                         self.win.moveMouse((650, 40))
                         pyautogui.click()
                     if dir[1] in ["bottom", "b", "bot", "down", "d"]:

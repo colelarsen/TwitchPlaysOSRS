@@ -100,7 +100,7 @@ class ValidationController:
         return False
 
     def validSpace(self, line):
-        if re.match("^((spacebar)|(space))( [0-9]+)?( +.*)?$", line):
+        if re.match("^((spacebar)|(space)|(sp))( [0-9]+)?( +.*)?$", line):
             return True
         return False
 
@@ -201,7 +201,7 @@ class ValidationController:
     ######################### HUD VALIDATIONS #########################
 
     def validMapMove(self, line):
-        if re.match("^((map)|(mm)|(m) ((tr)|(ur)|(br)|(bl)|(ul)|(tl)|(bottom)|(top)|(bot)|(down)|(left)|(right)|(t)|(b)|(d)|(l)|(r)))( +.*)?$", line): 
+        if re.match("^((map)|(mm)|(m) ((tr)|(ur)|(br)|(bl)|(ul)|(tl)|(bottom)|(top)|(up)|(bot)|(down)|(left)|(right)|(t)|(b)|(d)|(u)|(l)|(r)))( +.*)?$", line): 
             return True
         return False
     
