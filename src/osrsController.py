@@ -151,6 +151,7 @@ class osrsController:
             self.bankInv = (445, 340)
             self.bankEquip = (485, 340)
             self.quantities = self.bankQuantities()
+            self.pin = 6934
 
         class bankQuantities:
             def __init__(self):
@@ -180,7 +181,13 @@ class osrsController:
             elif which == 'all':
                 pyautogui.click(self.quantities.qAll)
 
+        def openBank(self, keyPress, pin):
+            for char in pin:
+                keyPress(char)
 
+
+    def openBank(self, pin):
+        self.bank.openBank(self.keyPress,pin)
 
 
     # click some number of menu items below current pos
