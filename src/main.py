@@ -70,19 +70,24 @@ def mainYT(commandList):
             break
 
 #Function that reads chat from Discords
-def mainDiscord(commandList):
-    discordBot = discordReader.DiscordBot(commandList)
+# def mainDiscord(commandList):
+#     discordBot = discordReader.DiscordBot(commandList)
 
-    discordBot.run(discordBotLogin)
+#     discordBot.run(discordBotLogin)
 
 commands = []
 
 #Main function gets what all other threads have added to command list and reads them through the parser
 def main(commandList):
+    counter = 0
     while True:
         ttvCont.readChat(commandList)
         commandList.clear()
         time.sleep(0.2)
+        if counter > 50:
+            ttvCont.checkLoginScreen()
+            ttvCont.checkBankScreen()
+
 
 #Start TTV thread
 mainTTVThread = threading.Thread(target=mainTTV, args=(commands,))
