@@ -4,6 +4,7 @@ import socket, time
 from config import *
 import pytchat
 import threading
+import discordReader
 
 server = 'irc.chat.twitch.tv'
 port = 6667
@@ -69,8 +70,10 @@ def mainYT(commandList):
             break
 
 #Function that reads chat from Discords
-def mainDiscord(commands):
-    pass
+def mainDiscord(commandList):
+    discordBot = discordReader.DiscordBot(commandList)
+
+    discordBot.run(discordBotLogin)
 
 commands = []
 
@@ -82,15 +85,17 @@ def main(commandList):
         time.sleep(0.2)
 
 #Start TTV thread
-mainTTVThread = threading.Thread(target=mainTTV, args=(commands,))
-mainTTVThread.start()
+# mainTTVThread = threading.Thread(target=mainTTV, args=(commands,))
+# mainTTVThread.start()
 
 #Start Youtube thread
 # mainYTThread = threading.Thread(target=mainYT, args=())
 # mainYTThread.start()
 
-#Start Discord thread
-mainDiscordThread = threading.Thread(target=mainDiscord, args=(commands,))
-mainDiscordThread.start()
+#Start main thread
+mainThread = threading.Thread(target=main, args=(commands,))
+mainThread.start()
 
-main(commands)
+#Start Discord thread
+mainDiscord(commands)
+

@@ -9,7 +9,7 @@ ttvCont = ttv.TtvController()
 def testSingle(): 
     ttvCont = ttv.TtvController()
     try:
-        ttvCont.readChatTwitch("a" + '\r\n' + "b" + '\r\n' + "c" + '\r\n')
+        ttvCont.parseChat("combat")
 
     except Exception as e: 
         print(e)
