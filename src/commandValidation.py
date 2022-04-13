@@ -100,7 +100,7 @@ class ValidationController:
         return False
 
     def validSpace(self, line):
-        if re.match("^((spacebar)|(space))( [0-9]+)?( +.*)?$", line):
+        if re.match("^((spacebar)|(space)|(sp))( [0-9]+)?( +.*)?$", line):
             return True
         return False
 
