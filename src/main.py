@@ -70,10 +70,10 @@ def mainYT(commandList):
             break
 
 #Function that reads chat from Discords
-# def mainDiscord(commandList):
-#     discordBot = discordReader.DiscordBot(commandList)
+def mainDiscord(commandList):
+    discordBot = discordReader.DiscordBot(commandList)
 
-#     discordBot.run(discordBotLogin)
+    discordBot.run(discordBotLogin)
 
 commands = []
 
