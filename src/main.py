@@ -45,10 +45,12 @@ def mainTTV(commandList):
                         msg = line.split(':', maxsplit=2)[2]
                         line = user + ": " + msg
 
+                        messageQueue.put("Twitch: " + line)
+
                         msg = msg.lower()
                         msg = msg.strip()
                         commandList.append(msg)
-                        messageQueue.put("Twitch: " + user + ": " + msg)
+                        
             except Exception as e: 
                 print(e)
         
