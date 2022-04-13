@@ -54,6 +54,20 @@ class TtvController:
         self.win = winSize()
         self.osrs = osrs.osrsController(self.win)
         self.validation = validation.ValidationController(self.osrs, self.win)
+        self.isOnLoginScreen = self.checkLoginScreen()
+        self.isOnBankSettingsScreen = self.checkBankSettings()
+        self.isOnBankPinScreen = self.checkBankPin()
+
+
+    def checkLoginScreen(self):
+        self.isOnLoginScreen = imagesearcharea("Images/loginscreen.PNG", self.win.xMin, self.win.yMin, self.win.xMax, self.win.yMax, 0.8)[0] != -1
+
+    def checkBankSettings(self):
+        self.isOnBankSettingsScreen = imagesearcharea("Images/bankPinSettings.PNG", self.win.xMin, self.win.yMin, self.win.xMax, self.win.yMax, 0.8)[0] != -1
+
+    def checkBankPin(self):
+        self.isOnBankPinScreen = imagesearcharea("Images/bankPinEntry.PNG", self.win.xMin, self.win.yMin, self.win.xMax, self.win.yMax, 0.8)[0] != -1
+
 
     def readChat(self, lines):
         try:
@@ -74,19 +88,16 @@ class TtvController:
 
         #Run all validation rules against this line... this is faster than doing image recogniztion everytime for bad input
         if self.validation.isValidInput(line):
-
-            isOnLoginScreen = imagesearch("Images/loginscreen.PNG", 0.8)[0] != -1
-            isOnBankPinScreen = imagesearch("Images/bankPin.PNG", 0.8)[0] != -1
             
-            if isOnBankPinScreen:
+            if self.isOnBankPinScreen:
                 pyautogui.keyDown("Escape")
                 time.sleep(0.25) 
                 pyautogui.keyUp("Escape")
-            elif isOnLoginScreen and line == "login":
+            elif self.isOnLoginScreen and line == "login":
                 self.osrs.login()
             
 
-            elif not isOnLoginScreen and not isOnBankPinScreen:
+            elif not self.isOnLoginScreen and not self.isOnBankPinScreen:
             # elif True: #uncomment this when you want to do some debugging locally without checking for bank shit
                 num = utility.getFirstNumber(line)
 
@@ -154,15 +165,18 @@ class TtvController:
                     pyautogui.keyDown("Escape")
                     time.sleep(0.1) 
                     pyautogui.keyUp("Escape")
+
+                elif self.validation.validQuests(line): 
+                    self.osrs.keyPress("F3")
                 
                 elif self.validation.validQuickUse(line):
                     self.osrs.inv.clickPos('w', 1)
                     print(line)
                     line = re.search("^(qu)( [w-z][1-7])?", line)
-                    if line.group() != 'qu':
-                        col = line.group().split(' ')[1]
-                        print(col)
-                        self.osrs.inv.clickPos(col[0],num)
+                    # if line.group() != 'qu':
+                    #     col = line.group().split(' ')[1]
+                    #     print(col)
+                    #     self.osrs.inv.clickPos(col[0],num)
                 
                 
                 elif self.validation.validClick(line): 
@@ -210,6 +224,15 @@ class TtvController:
                     lineWords = line.split(' ')
                     quantity = lineWords[1]
                     self.osrs.bank.changeQuantity(quantity.split('q')[1])
+
+                elif self.validation.validBankOpen(line):
+                    self.checkBankPin()
+                    if self.isOnBankPinScreen:
+                        lineWords = line.split(' ')
+                        pin = lineWords[2]
+                        self.osrs.openBank(pin)
+                    else:
+                        print('bank pin not open')
                 
 
                     
@@ -306,8 +329,7 @@ class TtvController:
                 elif self.validation.validStats(line): 
                     self.osrs.keyPress("F2")
                 
-                elif self.validation.validQuests(line): 
-                    self.osrs.keyPress("F3")
+                
                 
                 elif self.validation.validInv(line): 
                     self.osrs.keyPress("F4")
