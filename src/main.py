@@ -7,17 +7,21 @@ import threading
 import discordReader
 import queue
 import fileHandler
+import messageHandler
+
 
 server = 'irc.chat.twitch.tv'
 port = 6667
 nickname = 'newtwitchplaysosrs'
 youtubeVideoId = 'Q41OiZqu87c'
 
+messages = messageHandler.messageHandler()
+
 
 ttvCont = ttv.TtvController()
 
 #Function that reads chat from twitch
-def mainTTV(commandList, messageQueue): 
+def mainTTV(messages): 
     sock = socket.socket()
 
     sock.connect((server, port))
@@ -45,61 +49,46 @@ def mainTTV(commandList, messageQueue):
                         msg = line.split(':', maxsplit=2)[2]
                         line = user + ": " + msg
 
-                        fileHandler.addLineToQueue(msg, messageQueue, "TTV", user)
 
-                        msg = msg.lower()
-                        msg = msg.strip()
-                        commandList.append(msg)
+                        messages.get_message( "ttv", user, msg)
                         
             except Exception as e: 
                 print(e)
         
         time.sleep(0.1)
 
-#Function that reads chat from Youtube
-def mainYT(commandList, messageQueue):
-    print("Started")
-    chat = pytchat.create(video_id=youtubeVideoId)
-
-    while chat.is_alive():
-        try:
-            data = chat.get()
-            items = data.items
-            for c in items:
-                msg = c.message
-                msg = msg.lower()
-                msg = msg.strip()
-                commandList.append(msg)
-                messageQueue.put(msg)
-            # time.sleep(0.5)
-        except KeyboardInterrupt:
-            chat.terminate()
-            break
-
 #Function that reads chat from Discords
-def mainDiscord(commandList, messageQueue):
-    discordBot = discordReader.DiscordBot(commandList, messageQueue)
+def mainDiscord(messageHandler):
+    discordBot = discordReader.DiscordBot(messageHandler)
 
     discordBot.run(discordBotLogin)
 
 commands = []
-messageQueue = queue.Queue()
+
 
 #Main function gets what all other threads have added to command list and reads them through the parser
-def main(commandList, messageQueue):
+def main(messages):
     counter = 0
     while True:
-        ttvCont.readChat(commandList)
-        commandList.clear()
+        ttvCont.readChat(messages.commands)
+
+        if not messages.commands.empty():
+            messages.writeChatToFile()
+            messages.clear_commands()
+
         time.sleep(0.2)
+        counter += 1
         if counter > 50:
+            counter = counter - 50
             ttvCont.checkLoginScreen()
             ttvCont.checkBankSettings()
-        fileHandler.writeQueueToFile("chatHistory.txt", messageQueue)
+            messages.close_chat_file()
+            
+        
 
 
 #Start TTV thread
-mainTTVThread = threading.Thread(target=mainTTV, args=(commands, messageQueue,))
+mainTTVThread = threading.Thread(target=mainTTV, args=(messages,))
 mainTTVThread.start()
 
 #Start Youtube thread
@@ -107,9 +96,38 @@ mainTTVThread.start()
 # mainYTThread.start()
 
 #Start main thread
-mainThread = threading.Thread(target=main, args=(commands, messageQueue))
+mainThread = threading.Thread(target=main, args=(messages,))
 mainThread.start()
 
 #Start Discord thread
-mainDiscord(commands, messageQueue)
+mainDiscord(messages)
 
+
+
+
+
+
+
+
+
+
+## DEPRECIATED
+#Function that reads chat from Youtube
+# def mainYT(commandList, messageQueue):
+#     print("Started")
+#     chat = pytchat.create(video_id=youtubeVideoId)
+
+#     while chat.is_alive():
+#         try:
+#             data = chat.get()
+#             items = data.items
+#             for c in items:
+#                 msg = c.message
+#                 msg = msg.lower()
+#                 msg = msg.strip()
+#                 commandList.append(msg)
+#                 messageQueue.put(msg)
+#             # time.sleep(0.5)
+#         except KeyboardInterrupt:
+#             chat.terminate()
+#             break
