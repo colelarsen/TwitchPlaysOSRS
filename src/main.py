@@ -112,7 +112,6 @@ def main(commandList, messageQueue):
         if counter > 13:
             ttvCont.checkLoginScreen()
             ttvCont.checkBankSettings()
-            ttvCont.checkBankPin()
             counter = 0
         fileHandler.writeQueueToFile("chatHistory.txt", messageQueue)
     print("Main Thread Ending")
