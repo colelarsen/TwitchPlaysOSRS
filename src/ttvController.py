@@ -95,7 +95,6 @@ class TtvController:
 
 
     def parseChat(self, lineRaw):  
-        line = lineRaw.lower()
 
         wasValidLine = True
 
@@ -341,7 +340,7 @@ class TtvController:
                 elif self.validation.validStats(line): 
                     self.osrs.keyPress("F2")
                 
-                
+                # Former location of quest button, our dummy asses moved it higher in cascade instead of coding properly
                 
                 elif self.validation.validInv(line): 
                     self.osrs.keyPress("F4")
