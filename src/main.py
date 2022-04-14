@@ -94,7 +94,7 @@ def main(commandList, messageQueue):
         time.sleep(0.2)
         if counter > 50:
             ttvCont.checkLoginScreen()
-            ttvCont.checkBankScreen()
+            ttvCont.checkBankSettings()
         fileHandler.writeQueueToFile("chatHistory.txt", messageQueue)
 
 
