@@ -5,6 +5,8 @@ from config import *
 import pytchat
 import threading
 import discordReader
+import queue
+import fileHandler
 
 server = 'irc.chat.twitch.tv'
 port = 6667
@@ -15,7 +17,7 @@ youtubeVideoId = 'Q41OiZqu87c'
 ttvCont = ttv.TtvController()
 
 #Function that reads chat from twitch
-def mainTTV(commandList): 
+def mainTTV(commandList, messageQueue): 
     sock = socket.socket()
 
     sock.connect((server, port))
@@ -42,16 +44,20 @@ def mainTTV(commandList):
                         user = line.split(':')[1].split('!')[0]
                         msg = line.split(':', maxsplit=2)[2]
                         line = user + ": " + msg
-                        line = line.lower()
-                        line = line.strip()
+
+                        messageQueue.put("Twitch: " + line)
+
+                        msg = msg.lower()
+                        msg = msg.strip()
                         commandList.append(msg)
+                        
             except Exception as e: 
                 print(e)
         
         time.sleep(0.1)
 
 #Function that reads chat from Youtube
-def mainYT(commandList):
+def mainYT(commandList, messageQueue):
     print("Started")
     chat = pytchat.create(video_id=youtubeVideoId)
 
@@ -64,6 +70,7 @@ def mainYT(commandList):
                 msg = msg.lower()
                 msg = msg.strip()
                 commandList.append(msg)
+                messageQueue.put(msg)
             # time.sleep(0.5)
         except KeyboardInterrupt:
             chat.terminate()
@@ -76,9 +83,10 @@ def mainDiscord(commandList):
     discordBot.run(discordBotLogin)
 
 commands = []
+messageQueue = queue.Queue(25)
 
 #Main function gets what all other threads have added to command list and reads them through the parser
-def main(commandList):
+def main(commandList, messageQueue):
     counter = 0
     while True:
         ttvCont.readChat(commandList)
@@ -87,10 +95,11 @@ def main(commandList):
         if counter > 50:
             ttvCont.checkLoginScreen()
             ttvCont.checkBankScreen()
+        fileHandler.writeQueueToFile("chatHistory.txt", messageQueue)
 
 
 #Start TTV thread
-mainTTVThread = threading.Thread(target=mainTTV, args=(commands,))
+mainTTVThread = threading.Thread(target=mainTTV, args=(commands, messageQueue,))
 mainTTVThread.start()
 
 #Start Youtube thread
@@ -98,9 +107,9 @@ mainTTVThread.start()
 # mainYTThread.start()
 
 #Start main thread
-mainThread = threading.Thread(target=main, args=(commands,))
+mainThread = threading.Thread(target=main, args=(commands, messageQueue))
 mainThread.start()
 
 #Start Discord thread
-mainDiscord(commands)
+mainDiscord(commands, messageQueue)
 
