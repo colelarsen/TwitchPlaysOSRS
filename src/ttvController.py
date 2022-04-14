@@ -65,11 +65,9 @@ class TtvController:
         self.win = winSize()
         self.osrs = osrs.osrsController(self.win)
         self.validation = validation.ValidationController(self.osrs, self.win)
-        self.isOnLoginScreen = False
         self.checkLoginScreen()
-        self.isOnBankSettingsScreen = False
         self.checkBankSettings()
-        self.isOnBankPinScreen = False
+        self.checkBankPin()
 
 
     def checkLoginScreen(self):
@@ -111,7 +109,7 @@ class TtvController:
                 self.checkLoginScreen()
             
 
-            elif not self.isOnLoginScreen and not self.isOnBankPinScreen:
+            elif not self.isOnLoginScreen and not self.isOnBankPinScreen and not self.isOnBankSettingsScreen:
             # elif True: #uncomment this when you want to do some debugging locally without checking for bank shit
                 num = utility.getFirstNumber(line)
 
