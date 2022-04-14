@@ -15,7 +15,7 @@ port = 6667
 nickname = 'newtwitchplaysosrs'
 youtubeVideoId = 'Q41OiZqu87c'
 
-messages = messageHandler.messageHandler()
+messages = messageHandler.messageHandler("chatHistory.txt")
 
 
 ttvCont = ttv.TtvController()
