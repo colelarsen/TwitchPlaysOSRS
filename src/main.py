@@ -45,7 +45,7 @@ def mainTTV(commandList, messageQueue):
                         msg = line.split(':', maxsplit=2)[2]
                         line = user + ": " + msg
 
-                        fileHandler.addLineToQueue("Twitch: " + line, messageQueue)
+                        fileHandler.addLineToQueue(msg, messageQueue, "TTV", user)
 
                         msg = msg.lower()
                         msg = msg.strip()

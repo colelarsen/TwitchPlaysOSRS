@@ -12,9 +12,11 @@ def writeQueueToFile(filePath, queue):
     file1.write(textToWrite)
     file1.close()
 
-def addLineToQueue(line, queue):
+def addLineToQueue(line, queue, source, author):
     if len(queue.queue) == 25:
         queue.get(0)
     
-    queue.put(line)
+    queue.put(author + "(" + source + "): " + line)
+
+
 
