@@ -45,7 +45,7 @@ def mainTTV(commandList, messageQueue):
                         msg = line.split(':', maxsplit=2)[2]
                         line = user + ": " + msg
 
-                        messageQueue.put("Twitch: " + line)
+                        fileHandler.addLineToQueue(msg, messageQueue, "TTV", user)
 
                         msg = msg.lower()
                         msg = msg.strip()
@@ -77,13 +77,13 @@ def mainYT(commandList, messageQueue):
             break
 
 #Function that reads chat from Discords
-def mainDiscord(commandList):
-    discordBot = discordReader.DiscordBot(commandList)
+def mainDiscord(commandList, messageQueue):
+    discordBot = discordReader.DiscordBot(commandList, messageQueue)
 
     discordBot.run(discordBotLogin)
 
 commands = []
-messageQueue = queue.Queue(25)
+messageQueue = queue.Queue()
 
 #Main function gets what all other threads have added to command list and reads them through the parser
 def main(commandList, messageQueue):
@@ -94,7 +94,7 @@ def main(commandList, messageQueue):
         time.sleep(0.2)
         if counter > 50:
             ttvCont.checkLoginScreen()
-            ttvCont.checkBankScreen()
+            ttvCont.checkBankSettings()
         fileHandler.writeQueueToFile("chatHistory.txt", messageQueue)
 
 
