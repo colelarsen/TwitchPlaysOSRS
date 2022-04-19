@@ -85,11 +85,12 @@ class TtvController:
         self.isOnBankPinScreen = imagesearcharea("Images/bankPinEntry.PNG", *self.win.screenshot.region(), 0.8, im)[0] != -1
 
 
-    def readChat(self, lines):
+    def readChat(self, messages):
         try:
-            for i in lines:
-                line = random.choice(lines)
-                wasValid = self.parseChat(line)
+            for i in messages:
+                message = random.choice(messages)
+                wasValid = self.parseChat(message)
+                line = message.command
                 if wasValid:
                     print(line + ": was valid")
                     break
@@ -97,8 +98,9 @@ class TtvController:
                 print(e)
 
 
-    def parseChat(self, lineRaw):  
+    def parseChat(self, messageObj):  
 
+        line = messageObj.command
         wasValidLine = True
 
         #Run all validation rules against this line... this is faster than doing image recogniztion everytime for bad input
@@ -126,7 +128,13 @@ class TtvController:
                     self.osrs.main.clickPos(line[0], num)
 
                 elif self.validation.validDrop(line):
-                    coords = line.split(' ')[1].strip()
+                    coords = ""
+                    if(not line.startswith("drop") and not  line.startswith("d ")):
+                        coords = line.split('d')[1].strip()
+                        coords = coords.split(' ')[0].strip()
+                    else:
+                        coords = line.split(' ')[1].strip()
+
                     self.osrs.inv.dropItem(coords[0], num)
                 
                 #right click inventory spot

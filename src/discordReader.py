@@ -2,7 +2,6 @@ import requests
 import discord
 from discord.ext import commands
 from discord import Client
-import fileHandler
 import messageHandler
 
 class DiscordBot(discord.Client):
@@ -23,6 +22,6 @@ class DiscordBot(discord.Client):
     async def on_message(self, message):
         #TODO allows logout, bankpin to only come from 963799043170009098 (trusted discord plays channel)
         if message.channel.id == 963799439020007514:
-            self.messageHandler.get_message("disc", message.author.name, message.content)
+            self.messageHandler.put_message("disc", message.author.name, message.content)
         elif message.channel.id == 963799043170009098:
-            self.messageHandler.append("disc", message.author.name, message.content, False)
+            self.messageHandler.put_message("disc", message.author.name, message.content, False)

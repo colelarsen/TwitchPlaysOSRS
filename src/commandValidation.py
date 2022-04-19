@@ -187,6 +187,12 @@ class ValidationController:
             coords = line.split(' ')[1].strip()
             num = utility.getFirstNumber(coords)
             return self.osrs.inv.checkCoord(coords[0], num)
+        if re.match("^(d[ ]?[w-z][1-7])( +.*)?$", line): 
+            coords = line.split('d')[1].strip()
+            if coords.startswith(' '):
+                coords = line.split(' ')[1].strip()
+            num = utility.getFirstNumber(coords)
+            return self.osrs.inv.checkCoord(coords[0], num)
         return False
 
     def validQuickUse(self, line):

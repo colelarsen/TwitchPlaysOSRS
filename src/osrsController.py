@@ -103,9 +103,9 @@ class osrsController:
         def dropItem(self, letter, number):
             self.win.moveMouse(self.pos(letter,number))
             pyautogui.keyDown("shift")
-            time.sleep(0.1)
+            time.sleep(0.05)
             pyautogui.click()
-            time.sleep(0.1)
+            time.sleep(0.05)
             pyautogui.keyUp("shift")
 
 
