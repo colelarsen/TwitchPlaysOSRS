@@ -80,8 +80,7 @@ def main(messages):
         counter += 1
         if counter > 50:
             counter = counter - 50
-            ttvCont.checkLoginScreen()
-            ttvCont.checkBankSettings()
+            ttvCont.screen_check()
             messages.close_chat_file()
             
         

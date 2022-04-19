@@ -66,20 +66,27 @@ class TtvController:
         self.osrs = osrs.osrsController(self.win)
         self.validation = validation.ValidationController(self.osrs, self.win)
         self.isOnLoginScreen = False
+
         self.checkLoginScreen()
         self.isOnBankSettingsScreen = False
+
         self.checkBankSettings()
         self.isOnBankPinScreen = False
 
+    def screen_check(self):
+        im = region_grabber(self.win.screenshot.region())
+        self.checkLoginScreen(im)
+        self.checkBankSettings(im)
 
-    def checkLoginScreen(self):
-        self.isOnLoginScreen = imagesearcharea("Images/loginscreen.PNG", *self.win.screenshot.region(), 0.8)[0] != -1
 
-    def checkBankSettings(self):
-        self.isOnBankSettingsScreen = imagesearcharea("Images/bankPinSettings.PNG", *self.win.screenshot.region(), 0.8)[0] != -1
+    def checkLoginScreen(self, im=None):
+        self.isOnLoginScreen = imagesearcharea("Images/loginscreen.PNG", *self.win.screenshot.region(), 0.8, im)[0] != -1
 
-    def checkBankPin(self):
-        self.isOnBankPinScreen = imagesearcharea("Images/bankPinEntry.PNG", *self.win.screenshot.region(), 0.8)[0] != -1
+    def checkBankSettings(self, im=None):
+        self.isOnBankSettingsScreen = imagesearcharea("Images/bankPinSettings.PNG", *self.win.screenshot.region(), 0.8, im)[0] != -1
+
+    def checkBankPin(self, im=None):
+        self.isOnBankPinScreen = imagesearcharea("Images/bankPinEntry.PNG", *self.win.screenshot.region(), 0.8, im)[0] != -1
 
 
     def readChat(self, lines):
