@@ -8,7 +8,7 @@ import discordReader
 import queue
 import fileHandler
 import messageHandler
-
+import select
 
 server = 'irc.chat.twitch.tv'
 port = 6667
@@ -16,6 +16,7 @@ nickname = 'newtwitchplaysosrs'
 youtubeVideoId = 'Q41OiZqu87c'
 
 messages = messageHandler.messageHandler("chatHistory.txt")
+closeAllThreads = False
 
 
 ttvCont = ttv.TtvController()
@@ -29,39 +30,55 @@ def mainTTV(messages):
     sock.send(f"NICK {nickname}\n".encode('utf-8'))
     sock.send(f"JOIN {channel}\n".encode('utf-8'))
 
-    print("Started")
+    print("TTV Started")
 
 
-    while True:
-        resp = sock.recv(2048).decode('utf-8')
-        #print(resp)
+    while not closeAllThreads:
+        ready = select.select([sock], [], [], 2)
+        if ready[0]:
+            resp = sock.recv(2048).decode('utf-8')
+            #print(resp)
 
-        if resp.startswith('PING'):
-            sock.send("PONG\n".encode('utf-8'))
-        
-        elif len(resp) > 0:
-            try:
-                resp = resp.rstrip().split('\r\n')
-                for i in resp:
-                    if "PRIVMSG" in i:
-                        line = i
-                        user = line.split(':')[1].split('!')[0]
-                        msg = line.split(':', maxsplit=2)[2]
-                        line = user + ": " + msg
+            if resp.startswith('PING'):
+                sock.send("PONG\n".encode('utf-8'))
+            
+            elif len(resp) > 0:
+                try:
+                    resp = resp.rstrip().split('\r\n')
+                    for i in resp:
+                        if "PRIVMSG" in i:
+                          line = i
+                          user = line.split(':')[1].split('!')[0]
+                          msg = line.split(':', maxsplit=2)[2]
+                          line = user + ": " + msg
 
 
-                        messages.get_message( "ttv", user, msg)
-                        
-            except Exception as e: 
-                print(e)
-        
+                          messages.get_message( "ttv", user, msg)
+                except Exception as e: 
+                    print(e)
         time.sleep(0.1)
+    print("TTV Thread Ending")
+    sock.close()
+
 
 #Function that reads chat from Discords
 def mainDiscord(messageHandler):
+    
+
+#Function that reads chat from Discords
+def mainDiscord(commandList, messageQueue):
     discordBot = discordReader.DiscordBot(messageHandler)
+    global closeAllThreads
 
     discordBot.run(discordBotLogin)
+    while not closeAllThreads:
+        try:
+            time.sleep(0.2)
+        except KeyboardInterrupt:
+            closeAllThreads = True
+            break
+    print("Discord Thread Ending")
+    discordBot.close()
 
 commands = []
 
@@ -69,7 +86,7 @@ commands = []
 #Main function gets what all other threads have added to command list and reads them through the parser
 def main(messages):
     counter = 0
-    while True:
+    while not closeAllThreads:
         ttvCont.readChat(messages.commands)
 
         if not messages.commands.empty():
@@ -82,12 +99,13 @@ def main(messages):
             counter = counter - 50
             ttvCont.screen_check()
             messages.close_chat_file()
+    print("Main Thread Ending")
             
         
 
 
 #Start TTV thread
-mainTTVThread = threading.Thread(target=mainTTV, args=(messages,))
+mainTTVThread = threading.Thread(target=mainTTV, args=(messages,), name="mainTTVThread")
 mainTTVThread.start()
 
 #Start Youtube thread
@@ -95,7 +113,7 @@ mainTTVThread.start()
 # mainYTThread.start()
 
 #Start main thread
-mainThread = threading.Thread(target=main, args=(messages,))
+mainThread = threading.Thread(target=main, args=(messages,), name="Main Thread")
 mainThread.start()
 
 #Start Discord thread
