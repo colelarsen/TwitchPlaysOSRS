@@ -1,6 +1,5 @@
 import queue
 
-
 class messageHandler:
     def __init__(self, chatfp):
         self.chatQueue = queue.Queue(40)
@@ -14,7 +13,7 @@ class messageHandler:
             self.source = source
             self.author = author
 
-            self.chat = author + "(" + source + ")" + msg
+            self.chat = author + "(" + source + ") " + msg
 
             self.command = msg.lower()
             self.command = self.command.strip()
@@ -34,16 +33,16 @@ class messageHandler:
 
     # Closes chat file (called when login screen is checked ~ every 10s)
     def close_chat_file(self):
-        self.chatHistory.close()
+        self.chatHistoryFile.close()
 
     # Writes chat to output for OBS
     def writeChatToFile(self):
-        if self.chatHistory.closed: # Check if file is already open, if not open it
-            self.chatHistory = open(self.chatHistory.name,self.chatHistory.mode)
+        if self.chatHistoryFile.closed: # Check if file is already open, if not open it
+            self.chatHistoryFile = open(self.chatHistoryFile.name,self.chatHistoryFile.mode)
 
-        textToWrite = []
-        for message in self.chatQueue: # Get message history in string
+        textToWrite = ""
+        for message in self.chatQueue.queue: # Get message history in string
             textToWrite = textToWrite + message.chat + "\n"
 
-        self.chatHistory.write(textToWrite)
-        self.chatHistory.flush(textToWrite)
+        self.chatHistoryFile.write(textToWrite)
+        self.chatHistoryFile.flush()

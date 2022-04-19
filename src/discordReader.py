@@ -2,7 +2,6 @@ import requests
 import discord
 from discord.ext import commands
 from discord import Client
-import fileHandler
 import messageHandler
 
 class DiscordBot(discord.Client):

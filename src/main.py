@@ -6,7 +6,6 @@ import pytchat
 import threading
 import discordReader
 import queue
-import fileHandler
 import messageHandler
 import select
 
@@ -14,7 +13,6 @@ server = 'irc.chat.twitch.tv'
 port = 6667
 nickname = 'newtwitchplaysosrs'
 youtubeVideoId = 'Q41OiZqu87c'
-
 messages = messageHandler.messageHandler("chatHistory.txt")
 closeAllThreads = False
 
@@ -59,14 +57,10 @@ def mainTTV(messages):
         time.sleep(0.1)
     print("TTV Thread Ending")
     sock.close()
-
-
-#Function that reads chat from Discords
-def mainDiscord(messageHandler):
     
 
 #Function that reads chat from Discords
-def mainDiscord(commandList, messageQueue):
+def mainDiscord(messageHandler):
     discordBot = discordReader.DiscordBot(messageHandler)
     global closeAllThreads
 
@@ -89,7 +83,7 @@ def main(messages):
     while not closeAllThreads:
         ttvCont.readChat(messages.commands)
 
-        if not messages.commands.empty():
+        if len(messages.commands) > 0:
             messages.writeChatToFile()
             messages.clear_commands()
 
