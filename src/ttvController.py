@@ -65,11 +65,9 @@ class TtvController:
         self.win = winSize()
         self.osrs = osrs.osrsController(self.win)
         self.validation = validation.ValidationController(self.osrs, self.win)
-        self.isOnLoginScreen = False
         self.checkLoginScreen()
-        self.isOnBankSettingsScreen = False
         self.checkBankSettings()
-        self.isOnBankPinScreen = False
+        self.checkBankPin()
 
 
     def checkLoginScreen(self):
@@ -101,16 +99,13 @@ class TtvController:
         #Run all validation rules against this line... this is faster than doing image recogniztion everytime for bad input
         if self.validation.isValidInput(line):
             
-            if self.isOnBankPinScreen:
-                pyautogui.keyDown("Escape")
-                time.sleep(0.25) 
-                pyautogui.keyUp("Escape")
-            elif self.isOnLoginScreen and line == "login":
+
+            if self.isOnLoginScreen and line == "login":
                 self.osrs.login()
                 self.checkLoginScreen()
             
 
-            elif not self.isOnLoginScreen and not self.isOnBankPinScreen:
+            elif not self.isOnLoginScreen and not self.isOnBankSettingsScreen:
             # elif True: #uncomment this when you want to do some debugging locally without checking for bank shit
                 num = utility.getFirstNumber(line)
 
