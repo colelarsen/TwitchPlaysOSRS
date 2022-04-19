@@ -123,7 +123,13 @@ class TtvController:
                     self.osrs.main.clickPos(line[0], num)
 
                 elif self.validation.validDrop(line):
-                    coords = line.split(' ')[1].strip()
+                    coords = ""
+                    if(not line.startswith("drop") and not  line.startswith("d ")):
+                        coords = line.split('d')[1].strip()
+                        coords = coords.split(' ')[0].strip()
+                    else:
+                        coords = line.split(' ')[1].strip()
+
                     self.osrs.inv.dropItem(coords[0], num)
                 
                 #right click inventory spot

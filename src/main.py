@@ -51,7 +51,7 @@ def mainTTV(messages):
                           line = user + ": " + msg
 
 
-                          messages.get_message( "ttv", user, msg)
+                          messages.put_message( "ttv", user, msg)
                 except Exception as e: 
                     print(e)
         time.sleep(0.1)

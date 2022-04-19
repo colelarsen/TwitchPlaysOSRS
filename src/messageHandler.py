@@ -19,7 +19,7 @@ class messageHandler:
             self.command = self.command.strip()
             
     # Take in message object params, add to chatQueue and commands list
-    def get_message(self, source, user, line, print = True):
+    def put_message(self, source, user, line, print = True):
         msg = self.message(source, user, line)
         if print:
             if self.chatQueue.full():
