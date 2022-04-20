@@ -123,9 +123,11 @@ class osrsController:
         def __init__(self):
             self.prayer = (560, 117) # TODO: Flags to know whether run is on or off
             self.run = (570, 150)
+            self.sprintOn = False
             self.compass = (565, 48)
             self.special = (600, 175)
             self.logout = (650, 460)
+            
             
 
         def clickCompass(self): 
@@ -143,7 +145,12 @@ class osrsController:
         def clickLogout(self):
             pyautogui.click(self.logout)
 
-
+        def checkRun(self, im=None):
+            x = self.run[0]
+            y = self.run[1]
+            self.sprintOn = imagesearcharea("Images/run_on.PNG", x - 20, y - 20, x + 20, y + 20,  0.8)[0] != -1
+            print(self.sprintOn)
+            return self.sprintOn
 
 
     class bankButtons:
