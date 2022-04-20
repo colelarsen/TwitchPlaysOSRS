@@ -209,7 +209,7 @@ class osrsController:
         pyautogui.keyDown("Enter")
         time.sleep(0.1) 
         pyautogui.keyUp("Enter")
-
+ 
         
     def keyPress(self, key, sleepTimer=100):
         pyautogui.keyDown(key)
@@ -221,6 +221,12 @@ class osrsController:
         pyautogui.keyDown(key)
         time.sleep(sleepTimer/1000)
         pyautogui.keyUp(key)
+    
+    def repeatPress(self, key, timeframe, presses=10):
+        for i in range(0, presses):
+            self.keyPress(key, 50)
+            time.sleep((timeframe/1000)/presses)
+        pass
 
 
     def zoom(self, dir, tick=500):
