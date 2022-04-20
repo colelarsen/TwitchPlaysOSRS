@@ -215,7 +215,10 @@ class ValidationController:
         return line in ["reset", "reset camera", "compass"]
     
     def validRun(self, line):
-        return line in ["run", "walk", "sprint"]
+        return line in ["run", "sprint"]
+
+    def validWalk(self,line):
+        return line in ["walk"]
     
     def validSpecialAttack(self, line):
         return line in line in ["sa", "special", "special attack"]
