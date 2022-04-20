@@ -10,7 +10,11 @@ def testSingle():
     messageHandlerC = messageHandler.messageHandler("testOutput.txt")
     try:
         time.sleep(4)
-        ttvCont.parseChat(messageHandlerC.message("ttv", "tester", "drop w1"))
+        ttvCont.parseChat(messageHandlerC.message('testSrc','testAuthor',"login"))
+        time.sleep(4)
+        ttvCont.parseChat(messageHandlerC.message('testSrc','testAuthor',"mouse 300 150"))
+        time.sleep(4)
+        ttvCont.parseChat(messageHandlerC.message('testSrc','testAuthor',"j7 15askf ???"))
     except Exception as e: 
         print(e)
 
