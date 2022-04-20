@@ -86,7 +86,6 @@ class TtvController:
     def checkBankPin(self, im=None):
         self.isOnBankPinScreen = imagesearcharea("Images/bankPinEntry.PNG", *self.win.screenshot.region(), 0.8, im)[0] != -1
 
-
     def readChat(self, messages):
         try:
             for i in messages:
@@ -215,7 +214,15 @@ class TtvController:
 
                 #run, walk - run
                 elif self.validation.validRun(line):
-                    self.osrs.buttons.clickRun()
+                    if not self.osrs.buttons.checkRun():
+                        print('sprint on')
+                        self.osrs.buttons.clickRun()
+
+                elif self.validation.validWalk(line):
+                    if self.osrs.buttons.checkRun():
+                        print('sprint off')
+                        self.osrs.buttons.clickRun()
+                
                 #sa, special, special attack - special attack
                 elif self.validation.validSpecialAttack(line):
                     self.osrs.buttons.clickSpecial()
