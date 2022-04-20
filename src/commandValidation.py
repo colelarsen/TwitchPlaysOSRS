@@ -27,22 +27,22 @@ class ValidationController:
 
     def validRClick(self, line):
         return line in ["r", "rc", "right click", "r click", "rclick"]
-
-
+    
     def validMouseMoveTo(self, line): ## I think we should change this to be "mouse x y"
-        if line.startswith("mouse to"):
+        if re.match("^mouse to \d+ \d+( +.*)?$", line):
             dur = line.split(' ')
-            return len(dur) == 5 and (int(dur[3]) <= self.win.xMax and int(dur[4])*-1 <= self.win.yMax)
+            num1 = utility.getFirstNumber(line)
+            num2 = utility.getSecondNumber(line)
+            return len(dur) >= 4 and num1 <= self.win.xMax and num2*-1 <= self.win.yMax
         return False
     
     def validMouseMove(self, line): ## and change this to be "mouserel x y" or smth, not as sold on this. we could also do like "mouse [dir] [num]"
-        if line.startswith("mouse "):
+        if re.match("^mouse \d+ \d+( +.*)?$", line):
             dur = line.split(' ')
-            return len(dur) == 4 and (int(dur[2]) <= self.win.xMax and int(dur[3])*-1 <= self.win.yMax)
+            num1 = utility.getFirstNumber(line)
+            num2 = utility.getSecondNumber(line)
+            return len(dur) >= 3 and num1 <= self.win.xMax and num2*-1 <= self.win.yMax
         return False
-    
-    def validCenterMouse(self, line):
-        return line.startswith("center mouse")
     
     def validMenu(self, line):
         if re.match("^(m|menu) [0-9]( +.*)?$", line):
