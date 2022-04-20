@@ -10,13 +10,15 @@ def testSingle():
     messageHandlerC = messageHandler.messageHandler("testOutput.txt")
     try:
         time.sleep(4)
-        ttvCont.parseChat(messageHandlerC.message('testSrc','testAuthor',"run"))
+        ttvCont.parseChat(messageHandlerC.message('testSrc','testAuthor',"m dr 100"))
         time.sleep(4)
-        ttvCont.parseChat(messageHandlerC.message('testSrc','testAuthor',"walk"))
+        ttvCont.parseChat(messageHandlerC.message('testSrc','testAuthor',"m dl 90"))
         time.sleep(4)
-        ttvCont.parseChat(messageHandlerC.message('testSrc','testAuthor',"walk"))
+        ttvCont.parseChat(messageHandlerC.message('testSrc','testAuthor',"m ur 95"))
         time.sleep(4)
-        ttvCont.parseChat(messageHandlerC.message('testSrc','testAuthor',"sprint"))
+        ttvCont.parseChat(messageHandlerC.message('testSrc','testAuthor',"m ul 90"))
+        time.sleep(4)
+        
 
     except Exception as e: 
         print(e)
@@ -24,5 +26,5 @@ def testSingle():
         
 testSingle()
 
-#while True:
-#    print(pyautogui.position())
+# while True:
+#     print(pyautogui.position())
