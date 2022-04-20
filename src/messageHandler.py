@@ -2,7 +2,7 @@ import queue
 
 class messageHandler:
     def __init__(self, chatfp):
-        self.chatQueue = queue.Queue(40)
+        self.chatQueue = queue.Queue(30)
         self.commands = []
         self.chatHistoryFile = open(chatfp, "w")
         self.chatHistoryFile.close()

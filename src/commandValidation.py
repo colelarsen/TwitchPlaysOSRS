@@ -34,6 +34,7 @@ class ValidationController:
             num1 = utility.getFirstNumber(line)
             num2 = utility.getSecondNumber(line)
             return len(dur) >= 4 and num1 <= self.win.xMax and num2*-1 <= self.win.yMax
+
         return False
     
     def validMouseMove(self, line): ## and change this to be "mouserel x y" or smth, not as sold on this. we could also do like "mouse [dir] [num]"
