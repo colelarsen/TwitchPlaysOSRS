@@ -320,9 +320,8 @@ class TtvController:
                 elif self.validation.validSpace(line): 
                     lineWords = line.split(' ')
                     if len(lineWords) > 1 and lineWords[1].isnumeric():
-                        number = int(lineWords[1])
-                        if number <= 10000:
-                            x = threading.Thread(target=self.osrs.keyPress, args=('space',number,))
+                        if num <= 10000:
+                            x = threading.Thread(target=self.osrs.repeatPress, args=('space',num,(num*3),))
                             x.start()
                     else:
                         self.osrs.keyPress("space")
