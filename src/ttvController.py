@@ -65,11 +65,13 @@ class TtvController:
         self.win = winSize()
         self.osrs = osrs.osrsController(self.win)
         self.validation = validation.ValidationController(self.osrs, self.win)
-        self.checkLoginScreen()
-        self.checkBankSettings()
+        self.isOnLoginScreen = False 
+        self.isOnBankSettingsScreen = False
+        self.screen_check()
         self.checkBankPin()
 
     def screen_check(self):
+        print('checking Screen')
         im = region_grabber(self.win.screenshot.region())
         self.checkLoginScreen(im)
         self.checkBankSettings(im)
@@ -105,7 +107,6 @@ class TtvController:
 
         #Run all validation rules against this line... this is faster than doing image recogniztion everytime for bad input
         if self.validation.isValidInput(line):
-            
 
             if self.isOnLoginScreen and line == "login":
                 self.osrs.login()
@@ -115,9 +116,7 @@ class TtvController:
             elif not self.isOnLoginScreen and not self.isOnBankSettingsScreen:
             # elif True: #uncomment this when you want to do some debugging locally without checking for bank shit
                 num = utility.getFirstNumber(line)
-
-
-                
+                secondNum = utility.getSecondNumber(line)
 
                 #Check if the input line should left click on inv
                 if self.validation.validInvLClick(line): 
@@ -192,7 +191,6 @@ class TtvController:
                 
                 elif self.validation.validQuickUse(line):
                     self.osrs.inv.clickPos('w', 1)
-                    print(line)
                     line = re.search("^(qu)( [w-z][1-7])?", line)
                     # if line.group() != 'qu':
                     #     col = line.group().split(' ')[1]
@@ -254,8 +252,6 @@ class TtvController:
                         self.osrs.openBank(pin)
                 
 
-                    
-                
                 #direction dur(optional)
                 elif self.validation.validCam(line):
                     lineWords = line.split(' ')
@@ -294,19 +290,10 @@ class TtvController:
                     else:
                         self.osrs.main.move_dir(dir)
 
-                
-                #move mouse x y
-                elif self.validation.validMouseMoveTo(line):
-                    dur = line.split(' ')
-                    self.win.moveMouse((int(dur[3]), int(dur[4])))
-                
+
                 elif self.validation.validCenterMouse(line):
                     self.win.moveMouse((260, 210))
                 
-                #move mouse x y
-                elif self.validation.validMouseMove(line):
-                    dur = line.split(' ')
-                    self.win.moveMouseRelative((int(dur[2]), int(dur[3])*-1))
                 
                 #click on a certain menu item
                 elif self.validation.validMenu(line):
@@ -384,6 +371,22 @@ class TtvController:
                     print(firstNum)
                     if(int(firstNum)):
                         self.osrs.keyPress(firstNum)
+
+                elif secondNum:
+                    #move mouse x y
+                    if self.validation.validMouseMoveTo(line):
+                        dur = line.split(' ')
+                        self.win.moveMouse((num, secondNum))
+                    
+                    
+                    #move mouse x y
+                    elif self.validation.validMouseMove(line):
+                        dur = line.split(' ')
+                        self.win.moveMouseRelative((num, secondNum * -1))
+                    
+                    else:
+                        wasValidLine = False
+
                 else:
                     wasValidLine = False
         else:
