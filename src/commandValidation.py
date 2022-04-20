@@ -207,7 +207,7 @@ class ValidationController:
     ######################### HUD VALIDATIONS #########################
 
     def validMapMove(self, line):
-        if re.match("^((map)|(mm)|(m) ((tr)|(ur)|(br)|(bl)|(ul)|(tl)|(bottom)|(top)|(up)|(bot)|(down)|(left)|(right)|(t)|(b)|(d)|(u)|(l)|(r)))( +.*)?$", line): 
+        if re.match("^((map)|(mm)|(m) ((tr)|(ur)|(br)|(bl)|(dl)|(dr)|(ul)|(tl)|(bottom)|(top)|(up)|(bot)|(down)|(left)|(right)|(t)|(b)|(d)|(u)|(l)|(r)))( +.*)?$", line): 
             return True
         return False
     
