@@ -154,7 +154,7 @@ class TtvController:
 
                 elif self.validation.validMapMove(line): # Need to add scaling to regex
                     dist = 80
-                    if num < 100 and num > 0:
+                    if num and num < 100 and num > 0:
                         dist = num
                     dir = line.split(' ')[1]
 
