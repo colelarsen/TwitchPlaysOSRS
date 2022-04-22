@@ -20,6 +20,9 @@ class messageHandler:
             
     # Take in message object params, add to chatQueue and commands list
     def put_message(self, source, user, line, print = True):
+        if source == 'nightbot':
+            return
+
         msg = self.message(source, user, line)
         if print:
             if self.chatQueue.full():
