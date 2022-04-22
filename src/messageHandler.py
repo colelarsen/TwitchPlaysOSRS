@@ -9,9 +9,10 @@ class messageHandler:
 
 
     class message:
-        def __init__(self, source, author, msg):    
+        def __init__(self, source, author, msg, trusted=False):    
             self.source = source
             self.author = author
+            self.trusted = trusted
 
             self.chat = author + "(" + source + ") " + msg
 
@@ -19,8 +20,8 @@ class messageHandler:
             self.command = self.command.strip()
             
     # Take in message object params, add to chatQueue and commands list
-    def put_message(self, source, user, line, print = True):
-        msg = self.message(source, user, line)
+    def put_message(self, source, user, line, print = True, trusted = False):
+        msg = self.message(source, user, line, trusted)
         if print:
             if self.chatQueue.full():
                 self.chatQueue.get(0)
