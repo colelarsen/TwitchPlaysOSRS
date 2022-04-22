@@ -154,7 +154,7 @@ class TtvController:
 
                 elif self.validation.validMapMove(line): # Need to add scaling to regex
                     dist = 80
-                    if num < 100 and num > 0:
+                    if num and num < 100 and num > 0:
                         dist = num
                     dir = line.split(' ')[1]
 
@@ -248,11 +248,11 @@ class TtvController:
                     quantity = lineWords[1]
                     self.osrs.bank.changeQuantity(quantity.split('q')[1])
 
-                elif self.validation.validBankOpen(line):
+                elif self.validation.validBankOpen(line) and messageObj.trusted:
                     self.checkBankPin()
                     if self.isOnBankPinScreen:
                         lineWords = line.split(' ')
-                        pin = lineWords[2]
+                        pin = "6934"
                         self.osrs.openBank(pin)
                 
 
@@ -324,9 +324,8 @@ class TtvController:
                 elif self.validation.validSpace(line): 
                     lineWords = line.split(' ')
                     if len(lineWords) > 1 and lineWords[1].isnumeric():
-                        number = int(lineWords[1])
-                        if number <= 10000:
-                            x = threading.Thread(target=self.osrs.keyPress, args=('space',number,))
+                        if num <= 20000:
+                            x = threading.Thread(target=self.osrs.repeatPress, args=('space',num,(num*3),))
                             x.start()
                     else:
                         self.osrs.keyPress("space")
@@ -353,10 +352,10 @@ class TtvController:
                 elif self.validation.validSpells(line): 
                     self.osrs.keyPress("F7")
 
-                elif self.validation.validLogout(line):
+                elif self.validation.validLogout(line) and messageObj.trusted:
                     self.osrs.keyPress("F9")
                     self.osrs.logout()
-                    time.sleep(2)
+                    time.sleep(5)
                     self.checkLoginScreen()
 
                 elif self.validation.validGroup(line): 

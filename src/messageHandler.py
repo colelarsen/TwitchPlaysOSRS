@@ -9,9 +9,10 @@ class messageHandler:
 
 
     class message:
-        def __init__(self, source, author, msg):    
+        def __init__(self, source, author, msg, trusted=False):    
             self.source = source
             self.author = author
+            self.trusted = trusted
 
             self.chat = author + "(" + source + ") " + msg
 
