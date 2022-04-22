@@ -248,7 +248,7 @@ class ValidationController:
         return line == "i" or line == "inv" or line == "inventory"
     
     def validLogin(self, line):
-        return line == "login"
+        return line == "login" or line == "!login"
 
     def validLogout(self,line):
         return line == "logout 5724"
