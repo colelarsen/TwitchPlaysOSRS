@@ -135,7 +135,7 @@ class ValidationController:
         return line=="stop"
     
     def validBankOpen(self,line):
-        if re.match("^(bank open)( [\d]{4}( +.*)?)?$",line):
+        if re.match("^(bank open)( +.*)?$",line):
             return True
         return False
 
@@ -255,7 +255,7 @@ class ValidationController:
         return line == "login"
 
     def validLogout(self,line):
-        return line == "logout 5724"
+        return line == "logout"
     
     def validGear(self, line):
         return   line == "gear" or line == "equip" or line == "equipment"
