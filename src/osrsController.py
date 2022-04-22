@@ -13,6 +13,7 @@ class osrsController:
 
         self.inv = self.invGrid(win)
         self.main = self.mainGrid(win)
+        self.map = self.mapGrid(win)
         self.buttons = self.uiButtons()
         self.bank = self.bankButtons()
         self.win = win
@@ -118,14 +119,55 @@ class osrsController:
             pyautogui.mouseUp()
 
 
+
+    class mapGrid:
+        def __init__(self,win):
+            self.win = win
+
+            self.xCenter = 646
+            self.yCenter = 111
+            self.rad = 70
+            self.dirs = {'ul':(-1,-1), 'u':(0,-1),'ur':(1,-1),'r':(1,0),'dr':(1,1),'d':(0,1),'dl':(-1,1),'l':(-1,0)}
+            
+            
+            ## Maybe unnecessary, always calculable
+            self.leftEdge = (576,111)
+            self.topEdge = (645, 36)
+            self.bottomEdge = (646, 185)
+            self.rightEdge = (718, 111)
+
+            
+
+        def clickMap(self, dir, dist = 80):
+            print('clicking')
+            clickdirs = self.dirs[dir]
+            xdir = clickdirs[0]
+            ydir = clickdirs[1]
+
+            xdist = self.rad * dist * xdir / 100
+            ydist = self.rad * dist * ydir / 100
+
+            xclick = self.xCenter + xdist 
+            yclick = self.yCenter + ydist
+
+            self.win.moveMouse((xclick,yclick))
+            pyautogui.click()
+
+            
+
+        
+
+
         
     class uiButtons:
         def __init__(self):
             self.prayer = (560, 117) # TODO: Flags to know whether run is on or off
             self.run = (570, 150)
+            self.sprintOn = False
             self.compass = (565, 48)
             self.special = (600, 175)
             self.logout = (650, 460)
+            
             
 
         def clickCompass(self): 
@@ -143,7 +185,12 @@ class osrsController:
         def clickLogout(self):
             pyautogui.click(self.logout)
 
-
+        def checkRun(self, im=None):
+            x = self.run[0]
+            y = self.run[1]
+            self.sprintOn = imagesearcharea("Images/run_on.PNG", x - 20, y - 20, x + 20, y + 20,  0.8)[0] != -1
+            print(self.sprintOn)
+            return self.sprintOn
 
 
     class bankButtons:

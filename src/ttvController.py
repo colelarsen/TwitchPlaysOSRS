@@ -86,7 +86,6 @@ class TtvController:
     def checkBankPin(self, im=None):
         self.isOnBankPinScreen = imagesearcharea("Images/bankPinEntry.PNG", *self.win.screenshot.region(), 0.8, im)[0] != -1
 
-
     def readChat(self, messages):
         try:
             for i in messages:
@@ -153,33 +152,30 @@ class TtvController:
                     num2 = utility.getFirstNumber(secondBar)
                     self.osrs.inv.dragItem(firstBar[0], num1, secondBar[0], num2)
 
-                elif self.validation.validMapMove(line): 
-                    dir = line.split(' ')
-                    if(dir[1] in ["top", "t", "up", "u"]):
-                        self.win.moveMouse((650, 40))
-                        pyautogui.click()
-                    if dir[1] in ["bottom", "b", "bot", "down", "d"]:
-                        self.win.moveMouse((650, 160))
-                        pyautogui.click()
-                    if(dir[1] in ["left", "l"]):
-                        self.win.moveMouse((590, 100))
-                        pyautogui.click()
-                    if(dir[1] in ["right", "r"]):
-                        self.win.moveMouse((710, 100))
-                        pyautogui.click()
+                elif self.validation.validMapMove(line): # Need to add scaling to regex
+                    dist = 80
+                    if num < 100 and num > 0:
+                        dist = num
+                    dir = line.split(' ')[1]
 
-                    if(dir[1] in ["top right", "tr", "ur", "up right"]):
-                        self.win.moveMouse((710, 60))
-                        pyautogui.click()
-                    if(dir[1] in ["top left", "tl", "ul", "up left"]):
-                        self.win.moveMouse((600, 60))
-                        pyautogui.click()
-                    if(dir[1] in ["bot right", "bottom right", "br", "dr", "down right"]):
-                        self.win.moveMouse((710, 150))
-                        pyautogui.click()
-                    if(dir[1] in ["bot left", "bottom left", "bl", "dl", "down left"]):
-                        self.win.moveMouse((600, 150))
-                        pyautogui.click()
+                    anglemod = .7
+                    
+                    if(dir in ["top", "t", "up", "u"]):
+                        self.osrs.map.clickMap('u', dist)
+                    if dir in ["bottom", "b", "bot", "down", "d"]:
+                        self.osrs.map.clickMap('d', dist)
+                    if(dir in ["left", "l"]):
+                        self.osrs.map.clickMap('l', dist)
+                    if(dir in ["right", "r"]):
+                        self.osrs.map.clickMap( 'r', dist)
+                    if(dir in ["top right", "tr", "ur", "up right"]):
+                        self.osrs.map.clickMap('ur', dist * anglemod)
+                    if(dir in ["top left", "tl", "ul", "up left"]):
+                        self.osrs.map.clickMap('ul', dist * anglemod)
+                    if(dir in ["bot right", "bottom right", "br", "dr", "down right"]):
+                        self.osrs.map.clickMap('dr', dist * anglemod)
+                    if(dir in ["bot left", "bottom left", "bl", "dl", "down left"]):
+                        self.osrs.map.clickMap('dl', dist * anglemod)
 
                 elif self.validation.validEscape(line):
                     pyautogui.keyDown("Escape")
@@ -215,7 +211,15 @@ class TtvController:
 
                 #run, walk - run
                 elif self.validation.validRun(line):
-                    self.osrs.buttons.clickRun()
+                    if not self.osrs.buttons.checkRun():
+                        print('sprint on')
+                        self.osrs.buttons.clickRun()
+
+                elif self.validation.validWalk(line):
+                    if self.osrs.buttons.checkRun():
+                        print('sprint off')
+                        self.osrs.buttons.clickRun()
+                
                 #sa, special, special attack - special attack
                 elif self.validation.validSpecialAttack(line):
                     self.osrs.buttons.clickSpecial()
