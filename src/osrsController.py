@@ -139,7 +139,6 @@ class osrsController:
             
 
         def clickMap(self, dir, dist = 80):
-            print('clicking')
             clickdirs = self.dirs[dir]
             xdir = clickdirs[0]
             ydir = clickdirs[1]

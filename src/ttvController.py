@@ -107,7 +107,7 @@ class TtvController:
         #Run all validation rules against this line... this is faster than doing image recogniztion everytime for bad input
         if self.validation.isValidInput(line):
 
-            if self.isOnLoginScreen and line == "login":
+            if self.isOnLoginScreen and (line == "login" or line == "!login"):
                 self.osrs.login()
                 self.checkLoginScreen()
             
