@@ -9,8 +9,8 @@ def testSingle():
     ttvCont = ttv.TtvController()
     messageHandlerC = messageHandler.messageHandler("testOutput.txt")
     try:
-        time.sleep(4)
-        ttvCont.parseChat(messageHandlerC.message('testSrc','testAuthor',"logout", True))
+        time.sleep(1)
+        ttvCont.parseChat(messageHandlerC.message('testSrc','testAuthor',"move mouse to 100 100"))
     except Exception as e: 
         print(e)
 
