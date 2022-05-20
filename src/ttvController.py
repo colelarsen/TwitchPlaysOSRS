@@ -324,7 +324,7 @@ class TtvController:
                 elif self.validation.validSpace(line): 
                     lineWords = line.split(' ')
                     if len(lineWords) > 1 and lineWords[1].isnumeric():
-                        if num <= 20000:
+                        if num <= 20:
                             x = threading.Thread(target=self.osrs.repeatPress, args=('space',num,(num*3),))
                             x.start()
                     else:
