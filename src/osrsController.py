@@ -272,7 +272,7 @@ class osrsController:
     def repeatPress(self, key, timeframe, presses=10):
         for i in range(0, presses):
             self.keyPress(key, 50)
-            time.sleep((timeframe/1000)/presses)
+            time.sleep(timeframe/presses)
         pass
 
 

@@ -34,7 +34,10 @@ class messageHandler:
 
     # Closes chat file (called when login screen is checked ~ every 10s)
     def close_chat_file(self):
-        self.chatHistoryFile.close()
+        try:
+            self.chatHistoryFile.close()
+        except:
+            print("An exception occurred when closing chat file")
 
     # Writes chat to output for OBS
     def writeChatToFile(self):
@@ -45,5 +48,10 @@ class messageHandler:
         for message in self.chatQueue.queue: # Get message history in string
             textToWrite = textToWrite + message.chat + "\n"
 
-        self.chatHistoryFile.write(textToWrite)
-        self.chatHistoryFile.flush()
+        try:
+            self.chatHistoryFile.write(textToWrite)
+            self.close_chat_file()
+        except:
+            print("An exception occurred when writing to chat file")
+        
+        

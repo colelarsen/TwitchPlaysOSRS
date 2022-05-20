@@ -56,6 +56,7 @@ def mainTTV(messages):
                     print(e)
         time.sleep(0.1)
     print("TTV Thread Ending")
+    messages.close_chat_file()
     sock.close()
     
 
@@ -70,6 +71,7 @@ def mainDiscord(messageHandler):
             time.sleep(0.2)
         except KeyboardInterrupt:
             closeAllThreads = True
+            messages.close_chat_file()
             break
     print("Discord Thread Ending")
     discordBot.close()
@@ -92,8 +94,8 @@ def main(messages):
         if counter > 50:
             counter = counter - 50
             ttvCont.screen_check()
-            messages.close_chat_file()
     print("Main Thread Ending")
+    messages.close_chat_file()
             
         
 
